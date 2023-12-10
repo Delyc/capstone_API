@@ -1,8 +1,11 @@
 package com.househunting.api.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(
@@ -25,8 +28,18 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 url = "https://house-hunting-api.herokuapp.com"
             )
         }
+
 )
 
+
+@SecurityScheme(
+    name="bearerAuth",
+    description = "JWT auth description",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT",
+    in = SecuritySchemeIn.HEADER
+)
 public class OpenApiConfig {
     
 }
