@@ -42,7 +42,22 @@ public class HouseService {
     public Object getAllHouses() {
         return houseRepository.findAll();
     }
+
+    public Object getHouseById(Long id) {
+        return houseRepository.findById(id);
+    }
     
-   
+    public void deleteHouseById(Long id) {
+        House houseToDelete = houseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("House not found with ID: " + id));
+        
+        houseRepository.delete(houseToDelete);
+    }
+
+    // public Object getHousesForLoggedInUser(){
+
+    // }
+
+    
 
 }
