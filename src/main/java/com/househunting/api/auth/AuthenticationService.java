@@ -23,7 +23,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final Cloudinary cloudinary; // Inject Cloudinary bean here
+    private final Cloudinary cloudinary; 
 
     public AuthenticationResponse register(RegisterRequest request, MultipartFile file) {
 

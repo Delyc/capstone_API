@@ -1,47 +1,56 @@
-// package com.househunting.api.controller;
+package com.househunting.api.controller;
 
-// import com.cloudinary.Cloudinary;
-// import com.cloudinary.utils.ObjectUtils;
-// import com.househunting.api.entity.House;
-// import com.househunting.api.repository.HouseRepository;
+import java.util.List;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.web.bind.annotation.*;
-// import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-// import java.io.IOException;
-// import java.util.Map;
+import com.househunting.api.dto.HouseRequest;
+import com.househunting.api.entity.House;
+import com.househunting.api.services.HouseService;
 
-// @RestController
-// @RequestMapping("/posts")
-// public class HouseController {
-
-//     @Autowired
-//     private HouseRepository blogPostRepository; // Assuming you have a repository for blog posts
-
-//     @Autowired
-//     private Cloudinary cloudinary; // Cloudinary bean configured in your application
-
-//     @PostMapping("/create")
-//     public House createPost(@RequestParam("file") MultipartFile file,
-//                                @RequestParam("title") String title,
-//                                @RequestParam("description") String description) throws IOException {
-
-//         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-
-//         String imageUrl = (String) uploadResult.get("url");
-
-//         House post = House.builder()
-//     .title(request.getTitle())
-//     .description(request.getDescription())
-//     .imageUrl(request.getImageUrl())
-//     // Additional setters for other properties of BlogPost if available
-//     .build();
-
-// blogPostRepository.save(post);
+import lombok.RequiredArgsConstructor;
 
 
-//         return blogPostRepository.save(post);
-//     }
-// }
+@RestController
+// @RequestMapping("/api/v1/houses")
+@RequiredArgsConstructor
+public class HouseController {
+     
+    
+    @Autowired HouseService houseService;
+         @PostMapping(value = "/api/v1/houses/create", consumes = "multipart/form-data")
+         public ResponseEntity<House> createHouse(@RequestParam("file") MultipartFile file,
+                                                            @RequestParam("title") String title,
+                                                            @RequestParam("description") String description,
+                                                            @RequestParam("price") String price,
+                                                            @RequestParam("googleMapLocation") String googleMapLocation) {
+                HouseRequest request = new HouseRequest();
+                request.setTitle(title);
+                request.setDescription(description);
+                request.setPrice(price);
+                request.setGoogleMapLocation(googleMapLocation);
+
+             return ResponseEntity.ok(houseService.createHouse(request, file));
+         }
+
+         @GetMapping("/api/v1/getAllHouses")
+            public ResponseEntity<Object> getAllHouses() {
+                return ResponseEntity.ok(houseService.getAllHouses());
+            }
+
+
+    
+   
+
+
+         
+    
+}
+
 
