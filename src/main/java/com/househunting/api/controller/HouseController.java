@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,6 +56,19 @@ public class HouseController {
                 return ResponseEntity.ok("House deleted successfully");
             }
     
+            @PutMapping(value="/api/v1/updateHouse/{id}",  consumes = "multipart/form-data")
+public ResponseEntity<Object> updateHouse(
+        @PathVariable Long id,
+        @RequestParam(required = false) MultipartFile file,
+        @RequestParam(required = false) String title,
+        @RequestParam(required = false) String description,
+        @RequestParam(required = false) String price,
+        @RequestParam(required = false) String googleMapLocation) {
+
+    houseService.updateHouse(id, file, title, description, price, googleMapLocation);
+    return ResponseEntity.ok("House updated successfully");
+}
+
    
 
 
