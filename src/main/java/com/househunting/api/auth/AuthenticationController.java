@@ -19,12 +19,12 @@ public class AuthenticationController {
 
     @PostMapping(value = "/register", consumes = "multipart/form-data")
     public ResponseEntity<AuthenticationResponse> register(@RequestParam("file") MultipartFile file,
-                                                           @RequestParam("firstName") String firstName,
-                                                           @RequestParam("lastName") String lastName,
-                                                           @RequestParam("email") String email,
-                                                           @RequestParam("password") String password,
-                                                           @RequestParam("address") String address,
-                                                           @RequestParam("phone") String phone) {
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName,
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
+            @RequestParam("address") String address,
+            @RequestParam("phone") String phone) {
         RegisterRequest request = new RegisterRequest();
         request.setFirstName(firstName);
         request.setLastName(lastName);
@@ -40,4 +40,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
+
+
+
 }

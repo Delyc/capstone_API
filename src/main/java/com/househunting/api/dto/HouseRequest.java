@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HouseRequest {
+    
     private String title;
     private String description;
     private String coverImageUrl; 
