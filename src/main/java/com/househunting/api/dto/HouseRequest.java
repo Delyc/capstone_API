@@ -10,10 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HouseRequest {
-    
     private String title;
     private String description;
     private String coverImageUrl; 
     private String price;
     private String googleMapLocation;
+    private String addedBy;
+    private boolean addedToWishlist;
 }

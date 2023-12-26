@@ -1,5 +1,7 @@
 package com.househunting.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,7 @@ import com.househunting.api.auth.AuthenticationService;
 import com.househunting.api.dto.HouseRequest;
 import com.househunting.api.entity.House;
 import com.househunting.api.services.HouseService;
+import com.househunting.api.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,11 +33,15 @@ public class HouseController {
     @Autowired
     AuthenticationService service;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping(value = "/api/v1/houses/create", consumes = "multipart/form-data")
     public ResponseEntity<House> createHouse(@RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("price") String price,
+            @RequestParam("token") String token,
             @RequestParam("googleMapLocation") String googleMapLocation) {
         HouseRequest request = new HouseRequest();
         request.setTitle(title);
@@ -42,7 +49,7 @@ public class HouseController {
         request.setPrice(price);
         request.setGoogleMapLocation(googleMapLocation);
 
-        return ResponseEntity.ok(houseService.createHouse(request, file));
+        return ResponseEntity.ok(houseService.createHouse(request, file, token));
     }
 
     @GetMapping("/api/v1/getAllHouses")
@@ -76,9 +83,30 @@ public class HouseController {
 
     @PostMapping("/api/v1/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody String email) {
-        // Logic to generate a unique token and send a password reset link to the user's
-        // email
         service.sendPasswordResetEmail(email);
         return ResponseEntity.ok("Password reset instructions sent to your email.");
     }
+
+    @PostMapping("/api/v1/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam("token") String token, @RequestBody String password) {
+        service.resetPassword(token, password);
+        return ResponseEntity.ok("Password reset successful.");
+    }
+
+    @GetMapping("/api/v1/houses/byme")
+    public ResponseEntity<Object> getHousesForLoggedUser(@RequestParam("email") String email) {
+        List<House> houses = (List<House>) houseService.getHousesForLoggedUser(email);
+        return ResponseEntity.ok(houses);
+    }
+
+    @PostMapping("/api/v1/wishlist/add")
+    public ResponseEntity<String> addToWishlist(@RequestBody House house, @RequestParam("email") String email) {
+        try {
+            houseService.addToHouseUsersWishlist(house, userService.findByEmail(email));
+            return ResponseEntity.ok("House added to the wishlist successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to add house to the wishlist");
+        }
+    }
+
 }

@@ -1,11 +1,15 @@
 package com.househunting.api.user;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.househunting.api.entity.House;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +17,9 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +35,7 @@ import lombok.NoArgsConstructor;
 public class User implements UserDetails {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Integer user_id;
 
     private String firstName;;
 
@@ -47,6 +54,24 @@ public class User implements UserDetails {
     private Role role;
 
     private String profilePictureUrl;
+
+    @Builder.Default
+    @ManyToMany
+    @JoinTable(
+        name = "user_wishlist",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "house_id"))
+    private Set<House> wishlist = new HashSet<>();
+
+    public void addToWishlist(House house) {
+        if (this.role == Role.USER) {
+            wishlist.add(house);
+            house.getUsersWishlist().add(this);
+        } else {
+            throw new RuntimeException("Only users can add to wishlist");
+        }
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

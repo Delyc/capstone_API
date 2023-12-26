@@ -4,7 +4,6 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,9 +20,9 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY ="HFO9Gdr8pSIW6G/7jn2oU/WIArDvWErPQiFTiThm/sQ7OlAAJTawgWw+Bhds2sEx";
+    private static final String SECRET_KEY = "HFO9Gdr8pSIW6G/7jn2oU/WIArDvWErPQiFTiThm/sQ7OlAAJTawgWw+Bhds2sEx";
 
-    public static  String extractUsername(String token) {
+    public static String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -35,33 +34,42 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
-    
-    public String generateToken( Map<String, Object> extraClaims, UserDetails userDetails) {
+
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         if (userDetails != null && userDetails instanceof User) {
             User user = (User) userDetails;
             extraClaims.put("role", "USER");
             extraClaims.put("firstName", user.getFirstName());
             extraClaims.put("profilePictureUrl", user.getProfilePictureUrl());
-        return Jwts
-            .builder()
-            .setClaims(extraClaims)
-            .setSubject(userDetails.getUsername())
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
-            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-            .compact();
+            return Jwts
+                    .builder()
+                    .setClaims(extraClaims)
+                    .setSubject(userDetails.getUsername())
+                    .setIssuedAt(new Date(System.currentTimeMillis()))
+                    .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+                    .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                    .compact();
         } else {
             throw new IllegalArgumentException("Invalid user details");
         }
-      
-    }
-
-    public String generateResetToken(String email){
-
-        String resetToken = UUID.randomUUID().toString();
-        return resetToken;
 
     }
+
+    public String generateResetToken(String email) {
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("email", email);
+        return Jwts
+                .builder()
+                .setClaims(claims)
+                .setSubject(email)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+
+    }
+
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
@@ -70,16 +78,18 @@ public class JwtService {
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
+
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
     private static Claims extractAllClaims(String token) {
         return Jwts
-            .parserBuilder()
-            .setSigningKey(getSignInKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private static Key getSignInKey() {

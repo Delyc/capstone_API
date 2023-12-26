@@ -1,5 +1,7 @@
 package com.househunting.api.auth;
 
+import java.util.Set;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.househunting.api.config.JwtService;
+import com.househunting.api.entity.House;
 import com.househunting.api.services.MailSenderService;
 import com.househunting.api.services.impl.EmailServiceImpl;
 import com.househunting.api.user.Role;
@@ -50,6 +53,7 @@ public class AuthenticationService {
                     .lastName(request.getLastName())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
+                    // .password(request.getPassword())
                     .role(Role.USER)
                     .address(request.getAddress())
                     .phone(request.getPhone())
@@ -90,8 +94,9 @@ public class AuthenticationService {
 
             // Craft an email containing the password reset link with the token
             String resetLink = "http://localhost:8080/reset-password?token=" + resetToken;
-            String emailContent = "<p>Click the link to reset your password: <a href='" + resetLink + "'>" + resetLink
-                    + "</a></p>";
+            String emailContent = "<html><body><p>Click the link to reset your password: <a href='" + resetLink + "'>"
+                    + resetLink
+                    + "</a></p></body></html>";
 
             // Send email with the password reset link
             mailSenderService.sendNewMail(email, "Password Reset", emailContent);
@@ -120,6 +125,41 @@ public class AuthenticationService {
             return null;
         }
     }
+
+    public void resetPassword(String token, String password) {
+        // Extract email from token
+
+        // String decodedToken =
+        String email = jwtService.extractUsername(token);
+
+        System.out.println(
+                "email ----------------------------------------------#############################################################################"
+                        + email);
+
+        // Find user by email
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        // Update password
+        // .password(passwordEncoder.encode(request.getPassword()))
+
+        user.setPassword(passwordEncoder.encode(password));
+        repository.save(user);
+    }
+
+
+   
+    public void addToWishlist(Integer userId, House house) {
+        User user = repository.findById(userId).orElse(null);
+        if (user != null) {
+            user.getWishlist().add(house);
+            repository.save(user);
+        } else {
+            // Handle if user is not found
+            // You can throw an exception or handle the scenario based on your application's logic
+        }
+    }
+
 
     // public void sendPasswordResetEmail(String email) {
     // // Assuming you're retrieving the email address from a JSON object

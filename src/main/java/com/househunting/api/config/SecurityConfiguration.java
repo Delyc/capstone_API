@@ -27,6 +27,8 @@ public class SecurityConfiguration {
                                                 .requestMatchers("/api/v1/auth/**",
                                                                 "/api/v1/getAllHouses/**",
                                                                 "/api/v1/forgot-password",
+                                                                "/api/v1/reset-password",
+                                                                "/api/v1/houses/wishlist",
                                                                 "/v2/api-docs",
                                                                 "/v3/api-docs",
                                                                 "/v3/api-docs/**",
