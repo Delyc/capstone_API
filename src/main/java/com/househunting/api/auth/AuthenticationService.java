@@ -14,7 +14,7 @@ import com.google.gson.JsonSyntaxException;
 import com.househunting.api.config.JwtService;
 import com.househunting.api.services.MailSenderService;
 import com.househunting.api.services.impl.EmailServiceImpl;
-import com.househunting.api.user.Role;
+// import com.househunting.api.user.Role;
 import com.househunting.api.user.User;
 import com.househunting.api.user.UserRepository;
 
@@ -44,20 +44,21 @@ public class AuthenticationService {
             String profilePictureUrl = null;
     
             if (file != null && !file.isEmpty()) {
-                // If a file is provided, upload it to Cloudinary
                 var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
                 profilePictureUrl = (String) uploadResult.get("secure_url");
             } else {
-                // If no file is provided, use a default image URL
+
                 profilePictureUrl = "https://res.cloudinary.com/ddlrtqeqm/image/upload/v1704103066/cld-sample-5.jpg";
             }
+
+
     
             var user = User.builder()
                     .firstName(request.getFirstName())
                     .lastName(request.getLastName())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.USER)
+                    .role(request.getRole())
                     .address(request.getAddress())
                     .phone(request.getPhone())
                     .profilePictureUrl(profilePictureUrl)

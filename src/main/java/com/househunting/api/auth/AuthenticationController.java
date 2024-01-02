@@ -23,14 +23,18 @@ public class AuthenticationController {
             @RequestParam("lastName") String lastName,
             @RequestParam("email") String email,
             @RequestParam("password") String password,
-            @RequestParam("address") String address,
+            @RequestParam("address") String address,            
+            @RequestParam("role") String role,
+
             @RequestParam("phone") String phone) {
         RegisterRequest request = new RegisterRequest();
         request.setFirstName(firstName);
         request.setLastName(lastName);
         request.setEmail(email);
         request.setPassword(password);
-        request.setAddress(address);
+        request.setAddress(address);        
+        request.setRole(role);
+
         request.setPhone(phone);
 
         return ResponseEntity.ok(service.register(request, file));
