@@ -9,11 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableJpaRepositories
-@EnableTransactionManagement
-@EnableScheduling
-@ComponentScan
-@EnableAutoConfiguration
+
 
 public class ApiApplication {
 
