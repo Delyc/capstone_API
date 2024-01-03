@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 public class User implements UserDetails {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @NotNull(message = "username should not be null")
     private String firstName;;
