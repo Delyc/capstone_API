@@ -1,7 +1,6 @@
 package com.househunting.api.entity;
 
 import com.househunting.api.user.User;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

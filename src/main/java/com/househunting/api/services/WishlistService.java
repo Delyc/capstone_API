@@ -22,9 +22,10 @@ public class WishlistService {
     @Autowired
     UserRepository userRepository;
 
-    public void addToWishlist(Long userID, Long houseID) {
+    public void addHouseToWishlist(Long userID, Long houseID) {
+               User user = userRepository.findById(userID).orElse(null);
+
        House house = houseRepository.findById(houseID).orElse(null);       
-       User user = userRepository.findById(userID).orElse(null);
 
        if (user != null && house != null) {
             Wishlist existingWishlistItem = wishlistRepository.findByUserAndHouse(user, house);
