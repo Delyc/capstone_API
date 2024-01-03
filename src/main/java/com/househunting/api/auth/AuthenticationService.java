@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.househunting.api.config.JwtService;
+import com.househunting.api.exceptions.DuplicateEmailException;
 import com.househunting.api.services.MailSenderService;
 import com.househunting.api.services.impl.EmailServiceImpl;
 // import com.househunting.api.user.Role;
@@ -37,7 +38,7 @@ public class AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request, MultipartFile file) {
         var existingUser = repository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
-            throw new EntityExistsException("Email already exists");
+            throw new DuplicateEmailException("Email already exists");
         }
     
         try {

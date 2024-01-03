@@ -21,5 +21,13 @@ public class ApplicationExceptionHandler {
         });
         return errorMap;
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateEmailException.class)
+    public Map<String, String> handleDuplicateEmailException(DuplicateEmailException ex) {
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("email", ex.getMessage());
+        return errorMap;
+    }
     
 }
