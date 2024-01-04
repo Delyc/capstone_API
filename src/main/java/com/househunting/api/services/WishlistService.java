@@ -1,5 +1,11 @@
 package com.househunting.api.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +50,40 @@ public class WishlistService {
 
     }
 
+    public List<WishlistResponse> getUserWishlistWithHouseDetails(Long userID) {
+                        // System.out.println( userID + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
+        Optional<User> userOptional = userRepository.findById(userID);
+                                    System.out.println(userOptional + "user optionsl $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+                            System.out.println(user + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
+            List<WishlistResponse> wishlistResponses = new ArrayList<>();
+
+            for (Wishlist wishlist : user.getWishlists()) {
+                WishlistResponse response = new WishlistResponse();
+                response.setId(wishlist.getId());
+
+                // Fetch house details from the wishlist entry directly
+                House house = wishlist.getHouse();
+                // Assuming you have a separate WishlistResponse class with setId() and
+                // setHouse() methods
+
+                System.out.println(house + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                response.setHouse(house);
+
+                wishlistResponses.add(response);
+            }
+
+            return wishlistResponses;
+        } else {
+            // Handle user not found scenario, maybe throw an exception or return an empty
+            // list
+            return Collections.emptyList();
+        }
+    }
     // public List<House> getWishlistForUser(User user) {
     //     List<Wishlist> wishlistItems = wishlistRepository.findByUser(user);
     //     return wishlistItems.stream().map(Wishlist::getHouse).collect(Collectors.toList());

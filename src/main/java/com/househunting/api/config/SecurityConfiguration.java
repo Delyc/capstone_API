@@ -25,6 +25,8 @@ public class SecurityConfiguration {
                                 .disable())
                                 .authorizeHttpRequests(requests -> requests
                                                 .requestMatchers("/api/v1/auth/**",
+                                                                "/api/v1/houses/create",
+                                                                "/api/v1/wishlist/**",
                                                                 "/api/v1/test/**",
                                                                 "/api/v1/getAllHouses/**",
                                                                 "/api/v1/forgot-password",
