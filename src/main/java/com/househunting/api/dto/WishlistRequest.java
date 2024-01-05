@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WishlistRequest {
     private Long user_id;
-    private Long house_id;
+    private HouseRequest houseRequest;
 
 }

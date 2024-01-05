@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.househunting.api.dto.HouseRequest;
 import com.househunting.api.entity.House;
 import com.househunting.api.entity.Wishlist;
 import com.househunting.api.repository.HouseRepository;
@@ -31,27 +32,51 @@ public class WishlistService {
 
     public void addHouseToWishlist(Long user_id, Long house_id) {
         User user = userRepository.findById(user_id).orElse(null);
-        House house = houseRepository.findById(house_id).orElse(null);
 
-        if (user != null && house != null) {
-            Wishlist existingEntry = wishlistRepository.findByUserAndHouse(user, house);
+House house = houseRepository.findById(house_id).orElse(null);       
 
-            if (existingEntry == null) {
-                Wishlist wishlistEntry = new Wishlist();
-                wishlistEntry.setUser(user);
-                wishlistEntry.setHouse(house);
+if (user != null && house != null) {
+     Wishlist existingWishlistItem = wishlistRepository.findByUserAndHouse(user, house);
 
-                wishlistRepository.save(wishlistEntry);
-            } else {
-                // Handle case where wishlist entry already exists
-                // For example: throw new RuntimeException("Wishlist entry already exists");
-            }
-        } else {
-            // Handle cases where user or house is not found
-            // For example: throw new IllegalArgumentException("User or house not found");
-        }
-    }
+     if (existingWishlistItem != null) {
+         // Item already exists, remove it
+         wishlistRepository.delete(existingWishlistItem);
+     } else {
+         // Item doesn't exist, add it
+         Wishlist wishlist = new Wishlist();
+         wishlist.setUser(user);
+         wishlist.setHouse(house);
+         wishlistRepository.save(wishlist);
+     }
+ }
 
+}
+
+
+    // public void addHouseToWishlist(Long user_id, Long house_id) {
+    //     User user = userRepository.findById(user_id).orElse(null);
+    //     House house = houseRepository.findById(house_id).orElse(null);
+
+    //     if (user != null && house != null) {
+    //         Wishlist existingEntry = wishlistRepository.findByUserAndHouse(user, house);
+
+    //         if (existingEntry == null) {
+    //             Wishlist wishlistEntry = new Wishlist();
+    //             wishlistEntry.setUser(user);
+    //             wishlistEntry.setHouse(house);
+
+    //             wishlistRepository.save(wishlistEntry);
+    //         } else {
+    //             // Handle case where wishlist entry already exists
+    //             // For example: throw new RuntimeException("Wishlist entry already exists");
+    //         }
+    //     } else {
+    //         // Handle cases where user or house is not found
+    //         // For example: throw new IllegalArgumentException("User or house not found");
+    //     }
+    // }
+
+   
     public void removeFromWishlist(Long wishlistItemId) {
         Wishlist wishlistItem = wishlistRepository.findById(wishlistItemId).orElse(null);
 
@@ -75,33 +100,34 @@ public class WishlistService {
         wishlistRepository.deleteByUserId(user_id);
     }
 
-    public List<WishlistResponse> getUserWishlistWithHouseDetails(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        System.out.println(
-                userOptional + "userptional &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+    public List<WishlistResponse> getUserWishlistWithHouseDetails(Long user_id) {
+        Optional<User> userOptional = userRepository.findById(user_id);
+    
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             List<WishlistResponse> wishlistResponses = new ArrayList<>();
-
+    
             for (Wishlist wishlist : user.getWishlists()) {
                 WishlistResponse response = new WishlistResponse();
                 response.setId(wishlist.getId());
-
-                // Fetch house details from the wishlist entry directly
+    
+                // Populate HouseResponse without circular references
                 House house = wishlist.getHouse();
-                // Assuming you have a separate WishlistResponse class with setId() and
-                // setHouse() methods
-                response.setHouse(house);
+                // HouseRequest houseResponse = new HouseRequest();                
+                House houseResponse = new House();
 
+                houseResponse.setId(house.getId());
+                houseResponse.setTitle(house.getTitle());
+                // Set other fields as needed
+    
+                response.setHouse(houseResponse);
                 wishlistResponses.add(response);
             }
-
+    
             return wishlistResponses;
         } else {
-            // Handle user not found scenario, maybe throw an exception or return an empty
-            // list
             return Collections.emptyList();
         }
     }
-
+    
 }

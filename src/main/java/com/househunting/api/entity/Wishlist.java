@@ -31,4 +31,5 @@ public class Wishlist {
 
     private House house;
 
+
 }

@@ -72,10 +72,12 @@ public class WishlistController {
         return "Wishlist emptied successfully!";
     }
 
+    
     @GetMapping("/api/v1/wishlist/get/{user_id}")
-    public ResponseEntity<List<WishlistResponse>> getUserWishlistWithHouseDetails(@PathVariable Long user_id) {
-        List<WishlistResponse> userWishlist = wishlistService.getUserWishlistWithHouseDetails(user_id);
-        return ResponseEntity.ok(userWishlist);
-    }
+public ResponseEntity<List<WishlistResponse>> getUserWishlistWithHouseDetails(@PathVariable Long user_id) {
+    List<WishlistResponse> userWishlist = wishlistService.getUserWishlistWithHouseDetails(user_id);
+    return ResponseEntity.ok(userWishlist);
+}
+
 
 }

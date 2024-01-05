@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,13 +26,12 @@ public class House {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+       @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
 
-    @JoinColumn(name = "house_id", referencedColumnName = "id")
+    // @JoinColumn(name = "house_id", referencedColumnName = "id")
 
     @JsonIgnoreProperties("house")
     private List<Wishlist> wishlists;
-
     // @OneToMany(mappedBy = "house")
     // private List<Wishlist> wishlists;
     private String title;

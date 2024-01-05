@@ -1,5 +1,6 @@
 package com.househunting.api.services;
 
+import com.househunting.api.dto.HouseRequest;
 import com.househunting.api.entity.House;
 
 import lombok.Data;
