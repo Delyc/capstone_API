@@ -58,7 +58,6 @@ public class WishlistService {
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-                            System.out.println(user + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 
             List<WishlistResponse> wishlistResponses = new ArrayList<>();
 
@@ -68,10 +67,8 @@ public class WishlistService {
 
                 // Fetch house details from the wishlist entry directly
                 House house = wishlist.getHouse();
-                // Assuming you have a separate WishlistResponse class with setId() and
-                // setHouse() methods
 
-                System.out.println(house + "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
                 response.setHouse(house);
 
                 wishlistResponses.add(response);
