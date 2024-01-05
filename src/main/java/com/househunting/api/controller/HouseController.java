@@ -30,6 +30,11 @@ public class HouseController {
     @Autowired
     AuthenticationService service;
 
+    @GetMapping("/")
+    public Object Welcome() {
+        return "Welcome to House Hunting API";
+    }
+
     @PostMapping(value = "/api/v1/houses/create", consumes = "multipart/form-data")
     public ResponseEntity<House> createHouse(@RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,

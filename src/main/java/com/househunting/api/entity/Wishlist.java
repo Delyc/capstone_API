@@ -1,43 +1,34 @@
 package com.househunting.api.entity;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.househunting.api.user.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class House {
+public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
 
-    @OneToMany
+    // @JsonBackReference
+    private User user;
 
+    @ManyToOne
     @JoinColumn(name = "house_id", referencedColumnName = "id")
 
-    @JsonIgnoreProperties("house")
-    private List<Wishlist> wishlists;
-
-    // @OneToMany(mappedBy = "house")
-    // private List<Wishlist> wishlists;
-    private String title;
-    private String description;
-    private String coverImageUrl;
-    private String price;
-    private String googleMapLocation;
+    private House house;
 
 }
