@@ -18,6 +18,7 @@ import com.househunting.api.repository.WishlistRepository;
 import com.househunting.api.services.WishlistResponse;
 import com.househunting.api.services.WishlistService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,9 +36,6 @@ public class WishlistController {
     public String addHouseToWishlist(
             @RequestParam("user_id") Long user_id,
             @RequestParam("house_id") Long house_id) {
-        System.out.println(
-                "hmmmm+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
         wishlistService.addHouseToWishlist(user_id, house_id);
         return "House added to the wishlist successfully!";
     }
@@ -77,6 +75,12 @@ public class WishlistController {
 public ResponseEntity<List<WishlistResponse>> getUserWishlistWithHouseDetails(@PathVariable Long user_id) {
     List<WishlistResponse> userWishlist = wishlistService.getUserWishlistWithHouseDetails(user_id);
     return ResponseEntity.ok(userWishlist);
+}
+
+@PostMapping("/api/v1/wishlist/share/{user_id}")
+public ResponseEntity<String> shareWishlist(@PathVariable Long user_id, @RequestBody String recipientEmail){
+    wishlistService.shareWishlist(user_id, "delyceu@gmail.com");
+    return ResponseEntity.ok("Wishlist shared");
 }
 
 

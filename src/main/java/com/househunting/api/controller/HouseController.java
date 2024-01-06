@@ -17,6 +17,7 @@ import com.househunting.api.dto.HouseRequest;
 import com.househunting.api.entity.House;
 import com.househunting.api.services.HouseService;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -80,7 +81,7 @@ public class HouseController {
     }
 
     @PostMapping("/api/v1/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestBody String email) {
+    public ResponseEntity<String> forgotPassword(@RequestBody String email) throws MessagingException, javax.mail.MessagingException {
         // Logic to generate a unique token and send a password reset link to the user's
         // email
         service.sendPasswordResetEmail(email);

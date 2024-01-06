@@ -103,6 +103,16 @@
     <artifactId>sendgrid-java</artifactId>
     <version>4.8.0</version> <!-- Use the latest version available -->
 </dependency>
+<dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
+
+	<dependency>
+    <groupId>com.sun.mail</groupId>
+    <artifactId>javax.mail</artifactId>
+    <version>1.6.2</version> <!-- Use the latest version available -->
+</dependency>
 
 
 
@@ -119,6 +129,11 @@
 	</dependencies>
 
 	<build>
+	 <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+        </resource>
+    </resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

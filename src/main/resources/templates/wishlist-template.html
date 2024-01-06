@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Wishlist</title>
+</head>
+<body>
+    <h2>Your Shared Wishlist</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>House ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Cover Image</th>
+                <th>Price</th>
+                <th>Google Map Location</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Use Thymeleaf to iterate over wishlistResponses -->
+            <tr th:each="wishlist : ${wishlistResponses}"> 
+                <td th:text="${wishlist.id}"></td>
+                <td th:text="${wishlist.house.id}"></td>
+                <td th:text="${wishlist.house.title}"></td>
+                <td th:text="${wishlist.house.description}"></td>
+                <td th:text="${wishlist.house.coverImageUrl}"></td>
+                <td th:text="${wishlist.house.price}"></td>
+                <td th:text="${wishlist.house.googleMapLocation}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
