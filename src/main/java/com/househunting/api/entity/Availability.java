@@ -26,8 +26,6 @@ public class Availability {
 
     private LocalDateTime endTime;
 
-    // Other fields related to availability
-
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
