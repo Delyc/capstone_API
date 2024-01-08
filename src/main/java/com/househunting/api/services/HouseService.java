@@ -82,6 +82,7 @@ public class HouseService {
                 // houseResponse.setAgentId(agent.getId());
                 // houseResponse.se
                 houseResponse.setAgentEmail(agent.getEmail());
+                houseResponse.setAgentPhonenumber(agent.getPhone());
                 houseResponse.setAgentName(agent.getFirstName()); // Adjust this based on your User entity
                 // Add other agent-related fields as needed
             }
@@ -105,7 +106,7 @@ public class HouseService {
     
     public HouseResponse getHouseById(Long houseId) {
         Optional<House> houseOptional = houseRepository.findById(houseId);
-
+    
         if (houseOptional.isPresent()) {
             House house = houseOptional.get();
             HouseResponse houseResponse = new HouseResponse();
@@ -115,7 +116,18 @@ public class HouseService {
             houseResponse.setCoverImageUrl(house.getCoverImageUrl());
             houseResponse.setDescription(house.getDescription());
             houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
-
+    
+            // Retrieve agent information
+            User agent = house.getAgent(); // Use the 'getAgent' method
+            if (agent != null) {
+                // Set agent-related fields in the response
+                houseResponse.setAgentId(agent.getId());
+                houseResponse.setAgentEmail(agent.getEmail());
+                houseResponse.setAgentPhonenumber(agent.getPhone());
+                houseResponse.setAgentName(agent.getFirstName()); // Adjust this based on your User entity
+                // Add other agent-related fields as needed
+            }
+    
             // Include wishlist information
             List<WishlistResponse> wishlistResponses = new ArrayList<>();
             for (Wishlist wishlist : house.getWishlists()) {
@@ -126,7 +138,7 @@ public class HouseService {
                 wishlistResponses.add(wishlistResponse);
             }
             houseResponse.setWishlists(wishlistResponses);
-
+    
             return houseResponse;
         } else {
             // Handle house not found
