@@ -66,8 +66,8 @@ public class WishlistService {
         wishlistRepository.deleteByUserId(user_id);
     }
 
-    public List<WishlistResponse> getUserWishlistWithHouseDetails(Long user_id) {
-        Optional<User> userOptional = userRepository.findById(user_id);
+    public List<WishlistResponse> getUserWishlistWithHouseDetails(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
     
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -84,6 +84,18 @@ public class WishlistService {
                 houseResponse.setCoverImageUrl(house.getCoverImageUrl());
                 houseResponse.setDescription(house.getDescription());
                 houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+    
+                // Retrieve agent information
+                User agent = house.getAgent(); // Use the 'getAgent' method
+                if (agent != null) {
+                    // Set agent-related fields in the response
+                    houseResponse.setAgentId(agent.getId());
+                    houseResponse.setAgentEmail(agent.getEmail());
+                    houseResponse.setAgentPhonenumber(agent.getPhone());
+                    houseResponse.setAgentName(agent.getFirstName()); // Adjust this based on your User entity
+
+                }
+    
                 response.setHouse(houseResponse);
                 wishlistResponses.add(response);
             }
@@ -93,7 +105,6 @@ public class WishlistService {
         }
     }
     
-
     public void shareWishlist(Long userId, String recipientEmail) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
