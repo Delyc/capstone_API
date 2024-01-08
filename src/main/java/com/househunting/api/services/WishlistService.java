@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
@@ -15,7 +14,6 @@ import com.househunting.api.repository.HouseRepository;
 import com.househunting.api.repository.WishlistRepository;
 import com.househunting.api.user.User;
 import com.househunting.api.user.UserRepository;
-
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 
@@ -132,7 +130,6 @@ public class WishlistService {
     private void sendShareableWishlistEmail(String recipientEmail, List<WishlistResponse> wishlistResponses) {
         Context context = new Context();
         context.setVariable("wishlistResponses", wishlistResponses);
-    
         // Use Thymeleaf template engine to process the HTML template
         String emailContent = thymeleafTemplateEngine.process("wishlist-template", context);
     
