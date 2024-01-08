@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.househunting.api.dto.WishlistResponse;
 import com.househunting.api.entity.Wishlist;
 import com.househunting.api.repository.WishlistRepository;
-import com.househunting.api.services.WishlistResponse;
 import com.househunting.api.services.WishlistService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;

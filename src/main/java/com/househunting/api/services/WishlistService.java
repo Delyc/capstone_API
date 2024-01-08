@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.TemplateEngine;
+
+import com.househunting.api.dto.HouseResponse;
+import com.househunting.api.dto.WishlistResponse;
 import com.househunting.api.entity.House;
 import com.househunting.api.entity.Wishlist;
 import com.househunting.api.repository.HouseRepository;
@@ -65,39 +68,34 @@ public class WishlistService {
 
     public List<WishlistResponse> getUserWishlistWithHouseDetails(Long user_id) {
         Optional<User> userOptional = userRepository.findById(user_id);
-
+    
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             List<WishlistResponse> wishlistResponses = new ArrayList<>();
-
+    
             for (Wishlist wishlist : user.getWishlists()) {
                 WishlistResponse response = new WishlistResponse();
                 response.setId(wishlist.getId());
-
-                // Populate HouseResponse without circular references
                 House house = wishlist.getHouse();
-                House houseResponse = new House();
-
+                HouseResponse houseResponse = new HouseResponse();
                 houseResponse.setId(house.getId());
                 houseResponse.setTitle(house.getTitle());
                 houseResponse.setPrice(house.getPrice());
                 houseResponse.setCoverImageUrl(house.getCoverImageUrl());
                 houseResponse.setDescription(house.getDescription());
                 houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
-                // houseResponse.setWishlists(house.getWishlists());
-
                 response.setHouse(houseResponse);
                 wishlistResponses.add(response);
             }
-
             return wishlistResponses;
         } else {
             return Collections.emptyList();
         }
     }
+    
 
-    public void shareWishlist(Long user_id, String recipientEmail) {
-        Optional<User> userOptional = userRepository.findById(user_id);
+    public void shareWishlist(Long userId, String recipientEmail) {
+        Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             List<WishlistResponse> wishlistResponses = new ArrayList<>();
@@ -106,27 +104,21 @@ public class WishlistService {
                 WishlistResponse response = new WishlistResponse();
                 response.setId(wishlist.getId());
 
-                // Populate HouseResponse without circular references
                 House house = wishlist.getHouse();
-                House houseResponse = new House();
-
+                HouseResponse houseResponse = new HouseResponse();
                 houseResponse.setId(house.getId());
                 houseResponse.setTitle(house.getTitle());
                 houseResponse.setPrice(house.getPrice());
                 houseResponse.setCoverImageUrl(house.getCoverImageUrl());
                 houseResponse.setDescription(house.getDescription());
                 houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
-                // houseResponse.setWishlists(house.getWishlists());
 
                 response.setHouse(houseResponse);
                 wishlistResponses.add(response);
             }
             sendShareableWishlistEmail(recipientEmail, wishlistResponses);
-
         }
-
     }
-
     private void sendShareableWishlistEmail(String recipientEmail, List<WishlistResponse> wishlistResponses) {
         Context context = new Context();
         context.setVariable("wishlistResponses", wishlistResponses);

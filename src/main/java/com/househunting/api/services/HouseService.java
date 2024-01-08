@@ -1,5 +1,8 @@
 package com.househunting.api.services;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,7 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.househunting.api.dto.HouseRequest;
+import com.househunting.api.dto.HouseResponse;
+import com.househunting.api.dto.WishlistResponse;
 import com.househunting.api.entity.House;
+import com.househunting.api.entity.Wishlist;
 import com.househunting.api.repository.HouseRepository;
 
 @Service
@@ -41,12 +47,65 @@ public class HouseService {
       
     }
 
-    public Object getAllHouses() {
-        return houseRepository.findAll();
+    public List<HouseResponse> getAllHouses() {
+        List<House> houses = houseRepository.findAll();
+        List<HouseResponse> houseResponses = new ArrayList<>();
+
+        for (House house : houses) {
+            HouseResponse houseResponse = new HouseResponse();
+            houseResponse.setId(house.getId());
+            houseResponse.setTitle(house.getTitle());
+            houseResponse.setPrice(house.getPrice());
+            houseResponse.setCoverImageUrl(house.getCoverImageUrl());
+            houseResponse.setDescription(house.getDescription());
+            houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+
+            // Include wishlist information
+            List<WishlistResponse> wishlistResponses = new ArrayList<>();
+            for (Wishlist wishlist : house.getWishlists()) {
+                WishlistResponse wishlistResponse = new WishlistResponse();
+                wishlistResponse.setId(wishlist.getId());
+                wishlistResponse.setId(wishlist.getUser().getId()); // Set user ID
+                // Set other wishlist-related fields
+                wishlistResponses.add(wishlistResponse);
+            }
+            houseResponse.setWishlists(wishlistResponses);
+
+            houseResponses.add(houseResponse);
+        }
+
+        return houseResponses;
     }
 
-    public Object getHouseById(Long id) {
-        return houseRepository.findById(id);
+    public HouseResponse getHouseById(Long houseId) {
+        Optional<House> houseOptional = houseRepository.findById(houseId);
+
+        if (houseOptional.isPresent()) {
+            House house = houseOptional.get();
+            HouseResponse houseResponse = new HouseResponse();
+            houseResponse.setId(house.getId());
+            houseResponse.setTitle(house.getTitle());
+            houseResponse.setPrice(house.getPrice());
+            houseResponse.setCoverImageUrl(house.getCoverImageUrl());
+            houseResponse.setDescription(house.getDescription());
+            houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+
+            // Include wishlist information
+            List<WishlistResponse> wishlistResponses = new ArrayList<>();
+            for (Wishlist wishlist : house.getWishlists()) {
+                WishlistResponse wishlistResponse = new WishlistResponse();
+                wishlistResponse.setId(wishlist.getId());
+                wishlistResponse.setId(wishlist.getUser().getId()); // Set user ID
+                // Set other wishlist-related fields
+                wishlistResponses.add(wishlistResponse);
+            }
+            houseResponse.setWishlists(wishlistResponses);
+
+            return houseResponse;
+        } else {
+            // Handle house not found
+            return null;
+        }
     }
     
     public void deleteHouseById(Long id) {
