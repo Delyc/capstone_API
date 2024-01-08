@@ -1,8 +1,10 @@
 package com.househunting.api.entity;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.househunting.api.user.User;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -17,14 +19,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Builder
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnoreProperties("houses") // Optional: ignore the 'houses' property in User to avoid circular reference
+    private User agent;
 
        @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
 

@@ -1,5 +1,7 @@
 package com.househunting.api.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,8 @@ import com.househunting.api.auth.AuthenticationService;
 import com.househunting.api.dto.HouseRequest;
 import com.househunting.api.entity.House;
 import com.househunting.api.services.HouseService;
+import com.househunting.api.user.User;
+import com.househunting.api.user.UserRepository;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -31,25 +35,35 @@ public class HouseController {
     @Autowired
     AuthenticationService service;
 
+    @Autowired
+    AuthenticationService authenticationService;
+
+    @Autowired
+    UserRepository userRepository;
+
     @GetMapping("/")
     public Object Welcome() {
         return "Welcome to House Hunting API";
     }
 
-    @PostMapping(value = "/api/v1/houses/create", consumes = "multipart/form-data")
-    public ResponseEntity<House> createHouse(@RequestParam("file") MultipartFile file,
+    @PostMapping(value = "/api/v1/houses/create/{user_id}", consumes = "multipart/form-data")
+    public ResponseEntity<House> createHouse(@PathVariable Long user_id,
+            @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("price") String price,
             @RequestParam("googleMapLocation") String googleMapLocation) {
+    
         HouseRequest request = new HouseRequest();
+        request.setUserId(user_id); // Set the user_id in the HouseRequest
         request.setTitle(title);
         request.setDescription(description);
         request.setPrice(price);
         request.setGoogleMapLocation(googleMapLocation);
-
+    
         return ResponseEntity.ok(houseService.createHouse(request, file));
     }
+    
 
     @GetMapping("/api/v1/getAllHouses")
     public ResponseEntity<Object> getAllHouses() {
