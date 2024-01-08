@@ -13,5 +13,9 @@ public class HouseResponse {
     private String description;
     private String googleMapLocation;
     private List<WishlistResponse> wishlists;
+     private Long agentId; 
+    private String agentName;
+    private String agentEmail;
+    private String agentPhonenumber;
 
 }
