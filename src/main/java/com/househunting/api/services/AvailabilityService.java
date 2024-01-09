@@ -12,6 +12,7 @@ import com.househunting.api.repository.AvailabilityRepository;
 import com.househunting.api.user.User;
 import com.househunting.api.user.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,4 +74,25 @@ public class AvailabilityService {
         return null;
     }
 
+
+    public Availability updateAvailability(Long id, LocalDateTime startTime, LocalDateTime endTime, Boolean isBooked) {
+        Availability availabilityToUpdate = availabilityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Availability not found with ID: " + id));
+    
+        if (startTime != null) {
+            availabilityToUpdate.setStartTime(startTime);
+        }
+    
+        if (endTime != null) {
+            availabilityToUpdate.setEndTime(endTime);
+        }
+    
+        if (isBooked != null) {
+            availabilityToUpdate.setIsBooked(isBooked);
+        }
+    
+        availabilityRepository.save(availabilityToUpdate);
+        return availabilityToUpdate;
+    }
+    
 }
