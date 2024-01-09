@@ -1,6 +1,7 @@
 package com.househunting.api.services;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -189,6 +190,44 @@ public class HouseService {
     houseRepository.save(houseToUpdate);
     return houseToUpdate;
 }
+
+public List<HouseResponse> getHousesForUser(Long userId) {
+    Optional<User> userOptional = userRepository.findById(userId);
+
+    if (userOptional.isPresent()) {
+        User user = userOptional.get();
+        List<HouseResponse> houseResponses = new ArrayList<>();
+
+        for (House house : user.getHouses()) {
+            HouseResponse houseResponse = new HouseResponse();
+            houseResponse.setId(house.getId());
+            houseResponse.setTitle(house.getTitle());
+            houseResponse.setPrice(house.getPrice());
+            houseResponse.setCoverImageUrl(house.getCoverImageUrl());
+            houseResponse.setDescription(house.getDescription());
+            houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+
+            // Include wishlist information
+            List<WishlistResponse> wishlistResponses = new ArrayList<>();
+            for (Wishlist wishlist : house.getWishlists()) {
+                WishlistResponse wishlistResponse = new WishlistResponse();
+                wishlistResponse.setId(wishlist.getId());
+                wishlistResponse.setId(wishlist.getUser().getId()); // Set user ID
+                // Set other wishlist-related fields
+                wishlistResponses.add(wishlistResponse);
+            }
+            houseResponse.setWishlists(wishlistResponses);
+
+            houseResponses.add(houseResponse);
+        }
+
+        return houseResponses;
+    } else {
+        // Handle user not found
+        return Collections.emptyList();
+    }
+}
+  
 
     // public Object getHousesForLoggedInUser(){
 

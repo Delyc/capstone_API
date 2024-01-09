@@ -1,8 +1,8 @@
 package com.househunting.api.controller;
 
-import java.util.Optional;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.househunting.api.auth.AuthenticationService;
 import com.househunting.api.dto.HouseRequest;
+import com.househunting.api.dto.HouseResponse;
 import com.househunting.api.entity.House;
 import com.househunting.api.services.HouseService;
-import com.househunting.api.user.User;
 import com.househunting.api.user.UserRepository;
-
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
@@ -100,5 +98,16 @@ public class HouseController {
         // email
         service.sendPasswordResetEmail(email);
         return ResponseEntity.ok("Password reset instructions sent to your email.");
+    }
+
+     @GetMapping("/api/v1/houses/{user_id}")
+    public ResponseEntity<List<HouseResponse>> getHousesForUser(@PathVariable Long user_id) {
+        List<HouseResponse> housesForUser = houseService.getHousesForUser(user_id);
+
+        if (!housesForUser.isEmpty()) {
+            return new ResponseEntity<>(housesForUser, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

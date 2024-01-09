@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.househunting.api.dto.AvailabilityResponse;
 import com.househunting.api.entity.Availability;
 import com.househunting.api.services.AvailabilityService;
 import java.util.List;
@@ -17,11 +19,12 @@ public class AvailabilityController {
     private AvailabilityService availabilityService;
 
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Availability>> getAvailabilitiesByUserId(@PathVariable Long userId) {
-        List<Availability> availabilities = availabilityService.getAvailabilitiesByUserId(userId);
-        return new ResponseEntity<>(availabilities, HttpStatus.OK);
-    }
+    @GetMapping("/userAvailabilities/{user_id}")
+public ResponseEntity<List<AvailabilityResponse>> getAvailabilitiesByUserId(@PathVariable Long user_id) {
+    List<AvailabilityResponse> availabilities = availabilityService.getAvailabilitiesByUserId(user_id);
+    return new ResponseEntity<>(availabilities, HttpStatus.OK);
+}
+
 
     @PostMapping("/user/{user_id}")
 

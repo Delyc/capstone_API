@@ -6,12 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import com.househunting.api.user.User;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -39,7 +36,8 @@ public class JwtService {
     public String generateToken( Map<String, Object> extraClaims, UserDetails userDetails) {
         if (userDetails != null && userDetails instanceof User) {
             User user = (User) userDetails;
-            extraClaims.put("role", "USER");
+            extraClaims.put("id", user.getId());
+            extraClaims.put("role", user.getRole());
             extraClaims.put("firstName", user.getFirstName());
             extraClaims.put("profilePictureUrl", user.getProfilePictureUrl());
         return Jwts

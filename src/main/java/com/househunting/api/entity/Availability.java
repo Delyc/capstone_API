@@ -26,6 +26,7 @@ public class Availability {
 
     private LocalDateTime endTime;
 
+    private Boolean isBooked = false;
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
