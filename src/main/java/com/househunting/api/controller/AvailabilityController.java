@@ -62,5 +62,12 @@ public ResponseEntity<List<AvailabilityResponse>> getAvailabilitiesByUserId(@Pat
         return response;
     }
 
+    @DeleteMapping("/availability/{id}")
+public ResponseEntity<Void> deleteAvailability(@PathVariable Long id) {
+    availabilityService.deleteAvailability(id);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+}
+
+
 }
 

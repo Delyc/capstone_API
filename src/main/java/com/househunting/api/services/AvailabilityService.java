@@ -95,4 +95,11 @@ public class AvailabilityService {
         return availabilityToUpdate;
     }
     
+    public void deleteAvailability(Long id) {
+        Availability availabilityToDelete = availabilityRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Availability not found with ID: " + id));
+    
+        availabilityRepository.delete(availabilityToDelete);
+    }
+    
 }
