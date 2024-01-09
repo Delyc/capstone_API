@@ -101,5 +101,28 @@ public class AvailabilityService {
     
         availabilityRepository.delete(availabilityToDelete);
     }
+
+    public List<AvailabilityResponse> getAllAvailabilities() {
+        List<Availability> availabilities = availabilityRepository.findAll();
+        List<AvailabilityResponse> availabilityResponses = new ArrayList<>();
+
+        for (Availability availability : availabilities) {
+            AvailabilityResponse response = mapAvailabilityToResponse(availability);
+            availabilityResponses.add(response);
+        }
+
+        return availabilityResponses;
+    }
+
+    private AvailabilityResponse mapAvailabilityToResponse(Availability availability) {
+        AvailabilityResponse response = new AvailabilityResponse();
+        response.setId(availability.getId());
+        response.setStartTime(availability.getStartTime());
+        response.setEndTime(availability.getEndTime());
+        response.setIsBooked(availability.getIsBooked());
+        
+
+        return response;
+    }
     
 }

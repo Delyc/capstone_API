@@ -68,6 +68,12 @@ public ResponseEntity<Void> deleteAvailability(@PathVariable Long id) {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 }
 
+@GetMapping("/all")
+    public ResponseEntity<List<AvailabilityResponse>> getAllAvailabilities() {
+        List<AvailabilityResponse> availabilities = availabilityService.getAllAvailabilities();
+        return new ResponseEntity<>(availabilities, HttpStatus.OK);
+    }
+
 
 }
 
