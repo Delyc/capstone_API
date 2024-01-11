@@ -17,6 +17,7 @@ public class Visit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String message;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -27,8 +28,14 @@ public class Visit {
     private User agent;
 
     @ManyToOne
+    @JoinColumn(name = "house_id", nullable = false)
+    private House house;
+
+    @ManyToOne
     @JoinColumn(name = "availability_id", nullable = false)
     private Availability availability;
+
+    
 
 
 

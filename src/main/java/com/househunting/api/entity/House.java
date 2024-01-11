@@ -39,6 +39,10 @@ public class House {
 
     @JsonIgnoreProperties("house")
     private List<Wishlist> wishlists;
+
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("house")
+    private List<Visit> visits;
     // @OneToMany(mappedBy = "house")
     // private List<Wishlist> wishlists;
     private String title;

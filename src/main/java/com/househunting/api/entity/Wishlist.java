@@ -29,6 +29,8 @@ public class Wishlist {
     @ManyToOne
     @JoinColumn(name = "house_id", referencedColumnName = "id")
 
+    
+
     private House house;
 
 

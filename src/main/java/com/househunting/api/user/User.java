@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.househunting.api.entity.Availability;
 import com.househunting.api.entity.House;
+import com.househunting.api.entity.Visit;
 import com.househunting.api.entity.Wishlist;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -49,6 +50,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
     // @JsonIgnoreProperties("user")
     private List<House> houses;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("user")
+    private List<Visit> visits;
 
     private String firstName;;
 

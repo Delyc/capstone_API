@@ -30,6 +30,9 @@ public class SecurityConfiguration {
                                                                 "/",
                                                                 "/api/v1/getAllHouses/**",
                                                                 "/api/v1/availabilities/**",
+                                                                                                                                "/api/v1/availabilities/**",
+                                                                "/api/v1/visits/**",
+
                                                                 "/api/v1/wishlist/**",
                                                                 "/api/v1/updateHouse/**",
                                                                 "/api/v1/forgot-password",
