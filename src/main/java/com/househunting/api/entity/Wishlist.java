@@ -1,6 +1,7 @@
 package com.househunting.api.entity;
 
 import com.househunting.api.user.User;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,14 +20,18 @@ public class Wishlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne
-    @JoinColumn(name="userID", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+
+    // @JsonBackReference
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="houseID", referencedColumnName = "id")
-    private House house;
+    @JoinColumn(name = "house_id", referencedColumnName = "id")
+
     
+
+    private House house;
+
 
 }

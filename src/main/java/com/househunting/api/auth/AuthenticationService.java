@@ -19,6 +19,7 @@ import com.househunting.api.services.impl.EmailServiceImpl;
 import com.househunting.api.user.User;
 import com.househunting.api.user.UserRepository;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 
@@ -87,7 +88,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public void sendPasswordResetEmail(String jsonString) {
+    public void sendPasswordResetEmail(String jsonString) throws MessagingException, javax.mail.MessagingException {
         // Extract email from JSON
         String email = extractEmail(jsonString);
 

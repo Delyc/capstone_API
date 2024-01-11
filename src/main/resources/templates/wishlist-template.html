@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shared Wishlist</title>
+    <style>
+        /* Add some basic styling for the cards */
+        .card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px;
+            width: 300px;
+            float: left;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>Your Shared Wishlist</h2>
+
+    <!-- Use Thymeleaf to iterate over wishlistResponses -->
+    <div th:each="wishlist : ${wishlistResponses}" class="card">
+        <h3>ID: <span th:text="${wishlist.id}"></span></h3>
+        <p>House ID: <span th:text="${wishlist.house.id}"></span></p>
+        <p>Title: <span th:text="${wishlist.house.title}"></span></p>
+        <p>Description: <span th:text="${wishlist.house.description}"></span></p>
+        <img th:src="${wishlist.house.coverImageUrl}" alt="Cover Image">
+        <p>Price: <span th:text="${wishlist.house.price}"></span></p>
+        <p>Google Map Location: <span th:text="${wishlist.house.googleMapLocation}"></span></p>
+    </div>
+</body>
+</html>

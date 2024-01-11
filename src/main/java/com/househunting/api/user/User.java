@@ -5,11 +5,17 @@ import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.househunting.api.entity.Availability;
+import com.househunting.api.entity.House;
+import com.househunting.api.entity.Visit;
 import com.househunting.api.entity.Wishlist;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -33,8 +39,25 @@ public class User implements UserDetails {
     private Long id;
 
     @OneToMany
-    @JoinColumn(name = "userID", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnoreProperties("user")
     List<Wishlist> wishlists;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("user")
+    private List<Availability> availabilities;
+
+    @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonIgnoreProperties("user")
+    private List<House> houses;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("user")
+    private List<Visit> visits;
+
+    // @OneToMany
+    // @JoinColumn(name = "userID", referencedColumnName = "id")
+    // List<Wishlist> wishlists;
 
     @NotNull(message = "username should not be null")
     private String firstName;;

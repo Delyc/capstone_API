@@ -1,5 +1,9 @@
 package com.househunting.api.services;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,8 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.househunting.api.dto.HouseRequest;
+import com.househunting.api.dto.HouseResponse;
+import com.househunting.api.dto.WishlistResponse;
 import com.househunting.api.entity.House;
+import com.househunting.api.entity.Wishlist;
 import com.househunting.api.repository.HouseRepository;
+import com.househunting.api.user.User;
+import com.househunting.api.user.UserRepository;
 
 @Service
 public class HouseService {
@@ -18,35 +27,124 @@ public class HouseService {
     Cloudinary cloudinary;
     @Autowired 
     HouseRepository houseRepository;
-    public House createHouse(HouseRequest request , MultipartFile file) {
-        try{
+    @Autowired
+    UserRepository userRepository;
+    
+    public House createHouse(HouseRequest request, MultipartFile file) {
+        try {
+            // Upload file to Cloudinary and get the secure URL
             var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
             String coverImageUrl = (String) uploadResult.get("secure_url");
-
-            var house = House.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .coverImageUrl(coverImageUrl)
-                .price(request.getPrice())
-                .googleMapLocation(request.getGoogleMapLocation())
-                .build();
-
+    
+            // Use the userRepository to fetch the User entity by ID
+            Optional<User> userOptional = userRepository.findById(request.getUserId());
+    
+            // Unwrap the Optional or handle the case where the user is not found
+            User user = userOptional.orElseThrow(() -> new RuntimeException("User not found for the given ID"));
+    
+            // Create a new House entity
+            House house = House.builder()
+                    .title(request.getTitle())
+                    .description(request.getDescription())
+                    .coverImageUrl(coverImageUrl)
+                    .price(request.getPrice())
+                    .googleMapLocation(request.getGoogleMapLocation())
+                    .agent(user)  // Set the user as the agent for the house
+                    .build();
+    
+            // Save the new House entity to the database
             houseRepository.save(house);
+    
             return house;
         } catch (Exception e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
             throw new RuntimeException("Failed to create house with cover image");
         }
-
-      
     }
-
-    public Object getAllHouses() {
-        return houseRepository.findAll();
+    
+    public List<HouseResponse> getAllHouses() {
+        List<House> houses = houseRepository.findAll();
+        List<HouseResponse> houseResponses = new ArrayList<>();
+    
+        for (House house : houses) {
+            HouseResponse houseResponse = new HouseResponse();
+            houseResponse.setId(house.getId());
+            houseResponse.setTitle(house.getTitle());
+            houseResponse.setPrice(house.getPrice());
+            houseResponse.setCoverImageUrl(house.getCoverImageUrl());
+            houseResponse.setDescription(house.getDescription());
+            houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+    
+            // Retrieve agent information
+            User agent = house.getAgent(); // Use the 'getAgent' method
+            if (agent != null) {
+                // Set agent-related fields in the response\
+                houseResponse.setAgentId(agent.getId());
+                // houseResponse.setAgentId(agent.getId());
+                // houseResponse.se
+                houseResponse.setAgentEmail(agent.getEmail());
+                houseResponse.setAgentPhonenumber(agent.getPhone());
+                houseResponse.setAgentName(agent.getFirstName()); // Adjust this based on your User entity
+                // Add other agent-related fields as needed
+            }
+    
+            // Include wishlist information
+            List<WishlistResponse> wishlistResponses = new ArrayList<>();
+            for (Wishlist wishlist : house.getWishlists()) {
+                WishlistResponse wishlistResponse = new WishlistResponse();
+                wishlistResponse.setId(wishlist.getId());
+                wishlistResponse.setId(wishlist.getUser().getId()); // Set user ID
+                // Set other wishlist-related fields
+                wishlistResponses.add(wishlistResponse);
+            }
+            houseResponse.setWishlists(wishlistResponses);
+    
+            houseResponses.add(houseResponse);
+        }
+    
+        return houseResponses;
     }
-
-    public Object getHouseById(Long id) {
-        return houseRepository.findById(id);
+    
+    public HouseResponse getHouseById(Long houseId) {
+        Optional<House> houseOptional = houseRepository.findById(houseId);
+    
+        if (houseOptional.isPresent()) {
+            House house = houseOptional.get();
+            HouseResponse houseResponse = new HouseResponse();
+            houseResponse.setId(house.getId());
+            houseResponse.setTitle(house.getTitle());
+            houseResponse.setPrice(house.getPrice());
+            houseResponse.setCoverImageUrl(house.getCoverImageUrl());
+            houseResponse.setDescription(house.getDescription());
+            houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+    
+            // Retrieve agent information
+            User agent = house.getAgent(); // Use the 'getAgent' method
+            if (agent != null) {
+                // Set agent-related fields in the response
+                houseResponse.setAgentId(agent.getId());
+                houseResponse.setAgentEmail(agent.getEmail());
+                houseResponse.setAgentPhonenumber(agent.getPhone());
+                houseResponse.setAgentName(agent.getFirstName()); // Adjust this based on your User entity
+                // Add other agent-related fields as needed
+            }
+    
+            // Include wishlist information
+            List<WishlistResponse> wishlistResponses = new ArrayList<>();
+            for (Wishlist wishlist : house.getWishlists()) {
+                WishlistResponse wishlistResponse = new WishlistResponse();
+                wishlistResponse.setId(wishlist.getId());
+                wishlistResponse.setId(wishlist.getUser().getId()); // Set user ID
+                // Set other wishlist-related fields
+                wishlistResponses.add(wishlistResponse);
+            }
+            houseResponse.setWishlists(wishlistResponses);
+    
+            return houseResponse;
+        } else {
+            // Handle house not found
+            return null;
+        }
     }
     
     public void deleteHouseById(Long id) {
@@ -92,6 +190,44 @@ public class HouseService {
     houseRepository.save(houseToUpdate);
     return houseToUpdate;
 }
+
+public List<HouseResponse> getHousesForUser(Long userId) {
+    Optional<User> userOptional = userRepository.findById(userId);
+
+    if (userOptional.isPresent()) {
+        User user = userOptional.get();
+        List<HouseResponse> houseResponses = new ArrayList<>();
+
+        for (House house : user.getHouses()) {
+            HouseResponse houseResponse = new HouseResponse();
+            houseResponse.setId(house.getId());
+            houseResponse.setTitle(house.getTitle());
+            houseResponse.setPrice(house.getPrice());
+            houseResponse.setCoverImageUrl(house.getCoverImageUrl());
+            houseResponse.setDescription(house.getDescription());
+            houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+
+            // Include wishlist information
+            List<WishlistResponse> wishlistResponses = new ArrayList<>();
+            for (Wishlist wishlist : house.getWishlists()) {
+                WishlistResponse wishlistResponse = new WishlistResponse();
+                wishlistResponse.setId(wishlist.getId());
+                wishlistResponse.setId(wishlist.getUser().getId()); // Set user ID
+                // Set other wishlist-related fields
+                wishlistResponses.add(wishlistResponse);
+            }
+            houseResponse.setWishlists(wishlistResponses);
+
+            houseResponses.add(houseResponse);
+        }
+
+        return houseResponses;
+    } else {
+        // Handle user not found
+        return Collections.emptyList();
+    }
+}
+  
 
     // public Object getHousesForLoggedInUser(){
 
