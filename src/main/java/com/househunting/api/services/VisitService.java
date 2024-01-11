@@ -35,15 +35,20 @@ public class VisitService {
 
     public Visit createVisit(VisitRequest visitRequest) {
         // Retrieve user, agent, and availability entities
-        System.out.println(visitRequest.getUser_id() + "testttt  #####################################################");
-          User user = userRepository.findById(visitRequest.getUser_id())
-            .orElseThrow(() -> new NoSuchElementException("User not found"));
+                System.out.println(visitRequest + " testttt get user #####################################################");
+        System.out.println(visitRequest.getAgent_id() + " testttt get agent #####################################################");
+
+        System.out.println(visitRequest.getHouse_id() + " testttt get house #####################################################");   
+             System.out.println(visitRequest.getAvailability_id() + " testttt get availability #####################################################");
+
+       
     
   House house = houseRepository.findById(visitRequest.getHouse_id())
-            .orElseThrow(() -> new NoSuchElementException("User not found"));
+            .orElseThrow(() -> new NoSuchElementException("House not found"));
         User agent = userRepository.findById(visitRequest.getAgent_id()).orElseThrow(() -> new NoSuchElementException("Agent not found"));
         Availability availability = availabilityRepository.findById(visitRequest.getAvailability_id()).orElseThrow(() -> new NoSuchElementException("Availability not found"));
-
+   User user = userRepository.findById(visitRequest.getUser_id())
+            .orElseThrow(() -> new NoSuchElementException("User not found"));
         // Create and save the Visit entity
         Visit visit = new Visit();
         visit.setUser(user);

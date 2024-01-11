@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VisitRequest {
-    private long house_id;    
+            private long user_id;
     private long agent_id;
-        private long user_id;
+
+    private long house_id;    
         private long availability_id;
         private String message;
 
