@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.househunting.api.config.JwtService;
+import com.househunting.api.exceptions.DuplicateEmailException;
 import com.househunting.api.services.MailSenderService;
 import com.househunting.api.services.impl.EmailServiceImpl;
 import com.househunting.api.user.Role;
@@ -36,27 +37,35 @@ public class AuthenticationService {
     private final MailSenderService mailSenderService;
 
     public AuthenticationResponse register(RegisterRequest request, MultipartFile file) {
-
         var existingUser = repository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
-            throw new EntityExistsException("Email already exists");
+            throw new DuplicateEmailException("Email already exists");
         }
-
+    
         try {
-            var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-            String profilePictureUrl = (String) uploadResult.get("secure_url");
+            String profilePictureUrl = null;
+    
+            if (file != null && !file.isEmpty()) {
+                var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+                profilePictureUrl = (String) uploadResult.get("secure_url");
+            } else {
 
+                profilePictureUrl = "https://res.cloudinary.com/ddlrtqeqm/image/upload/v1704103066/cld-sample-5.jpg";
+            }
+
+
+    
             var user = User.builder()
                     .firstName(request.getFirstName())
                     .lastName(request.getLastName())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.USER)
+                    .role(request.getRole())
                     .address(request.getAddress())
                     .phone(request.getPhone())
                     .profilePictureUrl(profilePictureUrl)
                     .build();
-
+    
             repository.save(user);
             var jwtToken = jwtService.generateToken(user);
             return AuthenticationResponse.builder()
@@ -67,7 +76,7 @@ public class AuthenticationService {
             throw new RuntimeException("Failed to register user with profile picture");
         }
     }
-
+    
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
