@@ -41,13 +41,13 @@ public class VisitService {
     
   House house = houseRepository.findById(visitRequest.getHouse_id())
             .orElseThrow(() -> new NoSuchElementException("User not found"));
-        User agent = userRepository.findById(visitRequest.getAgent_id()).orElseThrow(() -> new NoSuchElementException("Agent not found"));
+        // User agent = userRepository.findById(visitRequest.getAgent_id()).orElseThrow(() -> new NoSuchElementException("Agent not found"));
         Availability availability = availabilityRepository.findById(visitRequest.getAvailability_id()).orElseThrow(() -> new NoSuchElementException("Availability not found"));
 
         // Create and save the Visit entity
         Visit visit = new Visit();
         visit.setUser(user);
-        visit.setAgent(agent);
+        // visit.setAgent(agent);
         visit.setHouse(house);
         visit.setAvailability(availability);
         visit.setMessage(visitRequest.getMessage());

@@ -48,7 +48,7 @@ public class User implements UserDetails {
     private List<Availability> availabilities;
 
     @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JsonIgnoreProperties("user")
+    @JsonIgnoreProperties("agent")
     private List<House> houses;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
