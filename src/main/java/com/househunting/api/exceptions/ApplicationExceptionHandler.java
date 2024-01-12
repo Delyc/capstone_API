@@ -1,7 +1,5 @@
 package com.househunting.api.exceptions;
 
-package com.househunting.api.exceptions;
-
 import java.util.HashMap;
 import java.util.Map;
 
