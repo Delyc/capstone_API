@@ -16,12 +16,14 @@ import com.househunting.api.exceptions.DuplicateEmailException;
 import com.househunting.api.services.MailSenderService;
 import com.househunting.api.services.impl.EmailServiceImpl;
 import com.househunting.api.user.Role;
+import com.househunting.api.user.Status;
 import com.househunting.api.user.User;
 import com.househunting.api.user.UserRepository;
 
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -57,6 +59,7 @@ public class AuthenticationService {
     
             var user = User.builder()
                     .firstName(request.getFirstName())
+                    .status(Status.ONLINE)
                     .lastName(request.getLastName())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -131,47 +134,13 @@ public class AuthenticationService {
         }
     }
 
-    // public void sendPasswordResetEmail(String email) {
-    // // Assuming you're retrieving the email address from a JSON object
-    // String sendTo = email.trim();
 
-    // System.out.println("Sending password reset email to:
-    // ########################################" + sendTo);
+    public void disconnect(User user){
 
-    // // Generate a unique token
-    // String resetToken = jwtService.generateResetToken(email);
+    }
 
-    // // Craft an email containing the password reset link with the token
-    // String resetLink = "http://localhost:8080/reset-password?token=" +
-    // resetToken;
-    // String emailContent = "<p>Click the link to reset your password: <a href='" +
-    // resetLink + "'>" + resetLink
-    // + "</a></p>";
-
-    // // Send email with the password reset link
-    // emailService.sendSimpleEmail(sendTo, "Password Reset", emailContent);
-    // }
+    public List<User> findConnectedUser(){
+ return null;
+    }
 
 }
-
-// public void sendPasswordResetEmail(String email) {
-// // Assuming you're retrieving the email address from a JSON object
-
-// String plainTextEmailContent = convertJsonToPlainText(email);
-
-// //
-// String resetToken = jwtService.generateResetToken(plainTextEmailContent);
-
-// // Craft an HTML-formatted email containing the password reset link with the
-// // token
-// String resetLink = "http://localhost:8080/reset-password?token=" +
-// resetToken;
-// String emailContent = "<html><body><p>Click the link to reset your password:
-// <a href='" + resetLink + "'>"
-// + resetLink
-// + "</a></p></body></html>";
-
-// // Send HTML-formatted email with the password reset link
-// emailService.sendSimpleEmail(plainTextEmailContent, "Password Reset",
-// emailContent);
-// }

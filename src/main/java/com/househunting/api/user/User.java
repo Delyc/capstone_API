@@ -68,6 +68,8 @@ public class User implements UserDetails {
 
     private String address;
 
+    private Status status;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
