@@ -135,7 +135,14 @@ public class AuthenticationService {
     }
 
 
-    public void disconnect(User user){
+    public void disconnect(User user, Long id){
+        var storedUser = repository.findById(id)
+        .orElse(null);
+
+        if (storedUser != null){
+            storedUser.setStatus(Status.OFFLINE);
+            repository.save(storedUser);
+        }
 
     }
 
