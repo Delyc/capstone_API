@@ -63,7 +63,7 @@ public class AuthenticationService {
                     .lastName(request.getLastName())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(request.getRole())
+                    .role(Role.ADMIN)
                     .address(request.getAddress())
                     .phone(request.getPhone())
                     .profilePictureUrl(profilePictureUrl)
@@ -147,7 +147,7 @@ public class AuthenticationService {
     }
 
     public List<User> findConnectedUser(){
- return null;
+        return repository.findAllByStatus(Status.ONLINE);
     }
 
 }

@@ -53,7 +53,7 @@ public class HouseController {
             @RequestParam("googleMapLocation") String googleMapLocation) {
     
         HouseRequest request = new HouseRequest();
-        request.setUserId(user_id); // Set the user_id in the HouseRequest
+        request.setUserId(user_id); 
         request.setTitle(title);
         request.setDescription(description);
         request.setPrice(price);
@@ -94,8 +94,6 @@ public class HouseController {
 
     @PostMapping("/api/v1/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody String email) throws MessagingException, javax.mail.MessagingException {
-        // Logic to generate a unique token and send a password reset link to the user's
-        // email
         service.sendPasswordResetEmail(email);
         return ResponseEntity.ok("Password reset instructions sent to your email.");
     }

@@ -1,12 +1,16 @@
 package com.househunting.api.auth;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.househunting.api.user.Role;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,11 +21,14 @@ public class AuthenticationController {
 
     private final AuthenticationService service;
 
+    @MessageMapping("/user.register")
+    @SendTo("/user/topic")
     @PostMapping(value = "/register", consumes = "multipart/form-data")
     public ResponseEntity<AuthenticationResponse> register(@RequestParam("file") MultipartFile file,
             @RequestParam("firstName") String firstName,
             @RequestParam("lastName") String lastName,
             @RequestParam("email") String email,
+            @RequestParam("role") String role,
             @RequestParam("password") String password,
             @RequestParam("address") String address,
             @RequestParam("phone") String phone) {
@@ -30,6 +37,7 @@ public class AuthenticationController {
         request.setLastName(lastName);
         request.setEmail(email);
         request.setPassword(password);
+        request.setRole(Role.ADMIN);
         request.setAddress(address);
         request.setPhone(phone);
 
