@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +24,11 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
+
 // @RequestMapping("/api/v1/houses")
 @RequiredArgsConstructor
+
 public class HouseController {
 
     @Autowired
@@ -46,20 +50,24 @@ public class HouseController {
 
     @PostMapping(value = "/api/v1/houses/create/{user_id}", consumes = "multipart/form-data")
     public ResponseEntity<House> createHouse(@PathVariable Long user_id,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("price") String price,
-            @RequestParam("googleMapLocation") String googleMapLocation) {
-    
+                                             @RequestParam("coverImage") MultipartFile coverImage,
+                                             @RequestParam("title") String title,
+                                             @RequestParam("description") String description,
+                                             @RequestParam("price") String price,
+                                             @RequestParam("googleMapLocation") String googleMapLocation,
+                                             @RequestParam("pictures") List<MultipartFile> pictures,
+                                             @RequestParam("videos") List<MultipartFile> videos) {
+
         HouseRequest request = new HouseRequest();
-        request.setUserId(user_id); 
+        request.setUserId(user_id);
         request.setTitle(title);
         request.setDescription(description);
+        request.setCoverImageUrl(null); // This will be set after the cover image is uploaded
         request.setPrice(price);
         request.setGoogleMapLocation(googleMapLocation);
-    
-        return ResponseEntity.ok(houseService.createHouse(request, file));
+
+        House createdHouse = houseService.createHouse(request, coverImage, pictures, videos);
+        return ResponseEntity.ok(createdHouse);
     }
     
 

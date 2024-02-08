@@ -34,6 +34,15 @@ public class House {
     @JsonIgnoreProperties("house")
     private List<Visit> visits;
 
+    // New fields for pictures and videos
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("house")
+    private List<Picture> pictures;
+
+    @OneToMany(mappedBy = "house", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("house")
+    private List<Video> videos;
+
     private String title;
     private String description;
     private String coverImageUrl;

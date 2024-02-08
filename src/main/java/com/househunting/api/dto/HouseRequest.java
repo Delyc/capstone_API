@@ -1,9 +1,6 @@
 package com.househunting.api.dto;
 
-import java.util.Optional;
-
-import com.househunting.api.user.User;
-
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +14,12 @@ public class HouseRequest {
     private Long id;
     private String title;
     private String description;
-    private String coverImageUrl; 
+    private String coverImageUrl;
     private String price;
     private String googleMapLocation;
-    // private User user;
     private Long userId;
-    
+
+    // New fields for picture and video URLs
+    private List<String> pictureUrls;
+    private List<String> videoUrls;
 }

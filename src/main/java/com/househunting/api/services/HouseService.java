@@ -15,6 +15,8 @@ import com.househunting.api.dto.HouseRequest;
 import com.househunting.api.dto.HouseResponse;
 import com.househunting.api.dto.WishlistResponse;
 import com.househunting.api.entity.House;
+import com.househunting.api.entity.Picture;
+import com.househunting.api.entity.Video;
 import com.househunting.api.entity.Wishlist;
 import com.househunting.api.repository.HouseRepository;
 import com.househunting.api.user.User;
@@ -30,18 +32,18 @@ public class HouseService {
     @Autowired
     UserRepository userRepository;
     
-    public House createHouse(HouseRequest request, MultipartFile file) {
+   public House createHouse(HouseRequest request, MultipartFile coverImage, List<MultipartFile> pictureFiles, List<MultipartFile> videoFiles) {
         try {
-            // Upload file to Cloudinary and get the secure URL
-            var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-            String coverImageUrl = (String) uploadResult.get("secure_url");
-    
+            // Upload cover image to Cloudinary and get the secure URL
+            var coverImageUploadResult = cloudinary.uploader().upload(coverImage.getBytes(), ObjectUtils.emptyMap());
+            String coverImageUrl = (String) coverImageUploadResult.get("secure_url");
+
             // Use the userRepository to fetch the User entity by ID
             Optional<User> userOptional = userRepository.findById(request.getUserId());
-    
+
             // Unwrap the Optional or handle the case where the user is not found
             User user = userOptional.orElseThrow(() -> new RuntimeException("User not found for the given ID"));
-    
+
             // Create a new House entity
             House house = House.builder()
                     .title(request.getTitle())
@@ -49,19 +51,40 @@ public class HouseService {
                     .coverImageUrl(coverImageUrl)
                     .price(request.getPrice())
                     .googleMapLocation(request.getGoogleMapLocation())
-                    .agent(user)  // Set the user as the agent for the house
+                    .agent(user) // Set the user as the agent for the house
                     .build();
-    
-            // Save the new House entity to the database
+
+            // Initialize lists to store Picture and Video entities
+            List<Picture> pictures = new ArrayList<>();
+            List<Video> videos = new ArrayList<>();
+
+            // Upload pictures
+            for (MultipartFile file : pictureFiles) {
+                var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+                String imageUrl = (String) uploadResult.get("secure_url");
+                pictures.add(new Picture(null, house, imageUrl));
+            }
+
+            // Upload videos
+            for (MultipartFile file : videoFiles) {
+                var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("resource_type", "video"));
+                String videoUrl = (String) uploadResult.get("secure_url");
+                videos.add(new Video(null, house, videoUrl));
+            }
+
+            // Set pictures and videos to the house entity
+            house.setPictures(pictures);
+            house.setVideos(videos);
+
+            // Save the new House entity, along with its pictures and videos, to the database
             houseRepository.save(house);
-    
+
             return house;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("Failed to create house with cover image");
+            throw new RuntimeException("Failed to create house");
         }
     }
-    
     public List<HouseResponse> getAllHouses() {
         List<House> houses = houseRepository.findAll();
         List<HouseResponse> houseResponses = new ArrayList<>();

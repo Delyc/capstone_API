@@ -34,9 +34,9 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final Cloudinary cloudinary;
-
     private final EmailServiceImpl emailService;
-    private final MailSenderService mailSenderService;
+    
+
 
     public AuthenticationResponse register(RegisterRequest request, MultipartFile file) {
         var existingUser = repository.findByEmail(request.getEmail());
@@ -107,7 +107,7 @@ public class AuthenticationService {
                     + "</a></p>";
 
             // Send email with the password reset link
-            mailSenderService.sendNewMail(email, "Password Reset", emailContent);
+            // mailSenderService.sendNewMail(email, "Password Reset", emailContent);
         } else {
             System.out.println("No valid email found in the JSON.");
             // Handle the case where no valid email is found in the JSON
