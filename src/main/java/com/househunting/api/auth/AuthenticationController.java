@@ -58,13 +58,18 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
-        AuthenticationResponse authResponse = service.authenticate(request);
-        // Assuming the token is part of the AuthenticationResponse
-        String token = authResponse.getToken();
-        // Send the token to RabbitMQ
-        producer.sendMessage(token);
-        return ResponseEntity.ok(authResponse);
+        return ResponseEntity.ok(service.authenticate(request));
     }
+
+    // @PostMapping("/authenticate")
+    // public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    //     AuthenticationResponse authResponse = service.authenticate(request);
+    //     // Assuming the token is part of the AuthenticationResponse
+    //     String token = authResponse.getToken();
+    //     // Send the token to RabbitMQ
+    //     producer.sendMessage(token);
+    //     return ResponseEntity.ok(authResponse);
+    // }
     
     @GetMapping("/publish")
     public ResponseEntity<String> sendMessage(@RequestParam("message") String message){

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,107 +33,88 @@ public class HouseService {
     @Autowired
     UserRepository userRepository;
     
-   public House createHouse(HouseRequest request, MultipartFile coverImage, List<MultipartFile> pictureFiles, List<MultipartFile> videoFiles) {
-        try {
-            // Upload cover image to Cloudinary and get the secure URL
-            var coverImageUploadResult = cloudinary.uploader().upload(coverImage.getBytes(), ObjectUtils.emptyMap());
-            String coverImageUrl = (String) coverImageUploadResult.get("secure_url");
+  
+    public House createHouse(HouseRequest request) {
+        User agent = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found for the given ID"));
 
-            // Use the userRepository to fetch the User entity by ID
-            Optional<User> userOptional = userRepository.findById(request.getUserId());
+        House house = new House();
+        house.setTitle(request.getTitle());
+        house.setDescription(request.getDescription());
+        house.setCoverImageUrl(request.getCoverImageUrl()); 
+        house.setPrice(request.getPrice());
+        house.setGoogleMapLocation(request.getGoogleMapLocation());
+        house.setAgent(agent);
+house.setBedRooms(request.getBedRooms());
+house.setTypeOfHouse(request.getTypeOfHouse());
+        List<Picture> pictures = request.getPictureUrls().stream()
+            .map(url -> new Picture(null, house, url))
+            .collect(Collectors.toList());
+        house.setPictures(pictures);
 
-            // Unwrap the Optional or handle the case where the user is not found
-            User user = userOptional.orElseThrow(() -> new RuntimeException("User not found for the given ID"));
-
-            // Create a new House entity
-            House house = House.builder()
-                    .title(request.getTitle())
-                    .description(request.getDescription())
-                    .coverImageUrl(coverImageUrl)
-                    .price(request.getPrice())
-                    .googleMapLocation(request.getGoogleMapLocation())
-                    .agent(user) // Set the user as the agent for the house
-                    .build();
-
-            // Initialize lists to store Picture and Video entities
-            List<Picture> pictures = new ArrayList<>();
-            List<Video> videos = new ArrayList<>();
-
-            // Upload pictures
-            for (MultipartFile file : pictureFiles) {
-                var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-                String imageUrl = (String) uploadResult.get("secure_url");
-                pictures.add(new Picture(null, house, imageUrl));
-            }
-
-            // Upload videos
-            for (MultipartFile file : videoFiles) {
-                var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap("resource_type", "video"));
-                String videoUrl = (String) uploadResult.get("secure_url");
-                videos.add(new Video(null, house, videoUrl));
-            }
-
-            // Set pictures and videos to the house entity
-            house.setPictures(pictures);
-            house.setVideos(videos);
-
-            // Save the new House entity, along with its pictures and videos, to the database
-            houseRepository.save(house);
-
-            return house;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to create house");
-        }
+        List<Video> videos = request.getVideoUrls().stream()
+            .map(url -> new Video(null, house, url))
+            .collect(Collectors.toList());
+        house.setVideos(videos);
+        house.setFeatures(request.getFeatures());
+        return houseRepository.save(house);
     }
+  
+  
     public List<HouseResponse> getAllHouses() {
-        List<House> houses = houseRepository.findAll();
-        List<HouseResponse> houseResponses = new ArrayList<>();
-    
-        for (House house : houses) {
-            HouseResponse houseResponse = new HouseResponse();
-            houseResponse.setId(house.getId());
-            houseResponse.setTitle(house.getTitle());
-            houseResponse.setPrice(house.getPrice());
-            houseResponse.setCoverImageUrl(house.getCoverImageUrl());
-            houseResponse.setDescription(house.getDescription());
-            houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
-    
-            // Retrieve agent information
-            User agent = house.getAgent(); // Use the 'getAgent' method
-            if (agent != null) {
-                // Set agent-related fields in the response\
-                houseResponse.setAgentId(agent.getId());
-                // houseResponse.setAgentId(agent.getId());
-                // houseResponse.se
-                houseResponse.setAgentEmail(agent.getEmail());
-                houseResponse.setAgentPhonenumber(agent.getPhone());
-                houseResponse.setAgentName(agent.getFirstName()); // Adjust this based on your User entity
-                // Add other agent-related fields as needed
-            }
-    
-            // Include wishlist information
-            List<WishlistResponse> wishlistResponses = new ArrayList<>();
-            for (Wishlist wishlist : house.getWishlists()) {
-                WishlistResponse wishlistResponse = new WishlistResponse();
-                wishlistResponse.setId(wishlist.getId());
-                wishlistResponse.setId(wishlist.getUser().getId()); // Set user ID
-                // Set other wishlist-related fields
-                wishlistResponses.add(wishlistResponse);
-            }
-            houseResponse.setWishlists(wishlistResponses);
-    
-            houseResponses.add(houseResponse);
+    List<House> houses = houseRepository.findAll();
+    List<HouseResponse> houseResponses = new ArrayList<>();
+
+    for (House house : houses) {
+        HouseResponse houseResponse = new HouseResponse();
+        houseResponse.setId(house.getId());
+        houseResponse.setTitle(house.getTitle());
+        houseResponse.setPrice(house.getPrice());
+        houseResponse.setCoverImageUrl(house.getCoverImageUrl());
+        houseResponse.setDescription(house.getDescription());
+        houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+houseResponse.setBedRooms(house.getBedRooms());
+houseResponse.setTypeOfHouse(house.getTypeOfHouse());
+houseResponse.setFeatures(house.getFeatures());
+        User agent = house.getAgent(); 
+        if (agent != null) {
+            houseResponse.setAgentId(agent.getId());
+            houseResponse.setAgentEmail(agent.getEmail());
+            houseResponse.setAgentPhoneNumber(agent.getPhone()); 
+            houseResponse.setAgentName(agent.getFirstName() + " " + agent.getLastName()); 
         }
-    
-        return houseResponses;
+
+        // Process wishlists
+        List<WishlistResponse> wishlistResponses = house.getWishlists().stream()
+            .map(wishlist -> new WishlistResponse())
+            .collect(Collectors.toList());
+        houseResponse.setWishlists(wishlistResponses);
+
+        // Process pictures
+        List<String> pictureUrls = house.getPictures().stream()
+            .map(Picture::getImageUrl) 
+            .collect(Collectors.toList());
+        houseResponse.setPictureUrls(pictureUrls);
+
+        // Process videos
+        List<String> videoUrls = house.getVideos().stream()
+            .map(Video::getVideoUrl) 
+            .collect(Collectors.toList());
+        houseResponse.setVideoUrls(videoUrls);
+
+        houseResponses.add(houseResponse);
     }
-    
+
+    return houseResponses;
+}
+
     public HouseResponse getHouseById(Long houseId) {
         Optional<House> houseOptional = houseRepository.findById(houseId);
     
         if (houseOptional.isPresent()) {
             House house = houseOptional.get();
+
+            System.out.printf("############################################", house);
             HouseResponse houseResponse = new HouseResponse();
             houseResponse.setId(house.getId());
             houseResponse.setTitle(house.getTitle());
@@ -140,16 +122,17 @@ public class HouseService {
             houseResponse.setCoverImageUrl(house.getCoverImageUrl());
             houseResponse.setDescription(house.getDescription());
             houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
-    
+            houseResponse.setBedRooms(house.getBedRooms());
+            houseResponse.setTypeOfHouse(house.getTypeOfHouse());
+            houseResponse.setFeatures(house.getFeatures());
             // Retrieve agent information
-            User agent = house.getAgent(); // Use the 'getAgent' method
+            User agent = house.getAgent(); 
             if (agent != null) {
                 // Set agent-related fields in the response
                 houseResponse.setAgentId(agent.getId());
                 houseResponse.setAgentEmail(agent.getEmail());
-                houseResponse.setAgentPhonenumber(agent.getPhone());
-                houseResponse.setAgentName(agent.getFirstName()); // Adjust this based on your User entity
-                // Add other agent-related fields as needed
+                houseResponse.setAgentPhoneNumber(agent.getPhone());
+                houseResponse.setAgentName(agent.getFirstName()); 
             }
     
             // Include wishlist information
@@ -157,12 +140,22 @@ public class HouseService {
             for (Wishlist wishlist : house.getWishlists()) {
                 WishlistResponse wishlistResponse = new WishlistResponse();
                 wishlistResponse.setId(wishlist.getId());
-                wishlistResponse.setId(wishlist.getUser().getId()); // Set user ID
+                wishlistResponse.setId(wishlist.getUser().getId());
                 // Set other wishlist-related fields
                 wishlistResponses.add(wishlistResponse);
             }
             houseResponse.setWishlists(wishlistResponses);
-    
+          // Process pictures
+          List<String> pictureUrls = house.getPictures().stream()
+          .map(Picture::getImageUrl) 
+          .collect(Collectors.toList());
+      houseResponse.setPictureUrls(pictureUrls);
+
+      // Process videos
+      List<String> videoUrls = house.getVideos().stream()
+          .map(Video::getVideoUrl) 
+          .collect(Collectors.toList());
+      houseResponse.setVideoUrls(videoUrls);
             return houseResponse;
         } else {
             // Handle house not found
@@ -200,7 +193,6 @@ public class HouseService {
     }
 
     if (file != null) {
-        // Assuming an image file is provided, upload it and update the URL
         try {
             var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
             String newCoverImageUrl = (String) uploadResult.get("secure_url");

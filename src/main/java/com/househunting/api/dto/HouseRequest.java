@@ -1,6 +1,18 @@
 package com.househunting.api.dto;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.househunting.api.entity.enums.HouseType;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKeyColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +30,14 @@ public class HouseRequest {
     private String price;
     private String googleMapLocation;
     private Long userId;
+    private Long bedRooms;
 
+    // @Enumerated(EnumType.STRING)
+
+    private String typeOfHouse;
     // New fields for picture and video URLs
     private List<String> pictureUrls;
     private List<String> videoUrls;
+
+    private Map<String, Boolean> features = new HashMap<>();
 }

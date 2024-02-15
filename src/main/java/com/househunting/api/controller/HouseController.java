@@ -48,25 +48,23 @@ public class HouseController {
         return "Welcome to House Hunting API";
     }
 
-    @PostMapping(value = "/api/v1/houses/create/{user_id}", consumes = "multipart/form-data")
-    public ResponseEntity<House> createHouse(@PathVariable Long user_id,
-                                             @RequestParam("coverImage") MultipartFile coverImage,
-                                             @RequestParam("title") String title,
-                                             @RequestParam("description") String description,
-                                             @RequestParam("price") String price,
-                                             @RequestParam("googleMapLocation") String googleMapLocation,
-                                             @RequestParam("pictures") List<MultipartFile> pictures,
-                                             @RequestParam("videos") List<MultipartFile> videos) {
-
+    @PostMapping("/api/v1/houses/create/{user_id}")
+    public ResponseEntity<House> createHouse(@PathVariable("user_id") Long userId,
+                                             @RequestBody HouseResponse createHouseDto) {
         HouseRequest request = new HouseRequest();
-        request.setUserId(user_id);
-        request.setTitle(title);
-        request.setDescription(description);
-        request.setCoverImageUrl(null); // This will be set after the cover image is uploaded
-        request.setPrice(price);
-        request.setGoogleMapLocation(googleMapLocation);
-
-        House createdHouse = houseService.createHouse(request, coverImage, pictures, videos);
+        // Assuming HouseRequest is your service layer's expected input format
+        request.setUserId(userId);
+        request.setTitle(createHouseDto.getTitle());
+        request.setDescription(createHouseDto.getDescription());
+        request.setCoverImageUrl(createHouseDto.getCoverImageUrl());
+        request.setPrice(createHouseDto.getPrice());
+        request.setGoogleMapLocation(createHouseDto.getGoogleMapLocation());
+        request.setPictureUrls(createHouseDto.getPictureUrls());
+        request.setVideoUrls(createHouseDto.getVideoUrls());
+        request.setFeatures(createHouseDto.getFeatures());
+request.setBedRooms(createHouseDto.getBedRooms());
+request.setTypeOfHouse(createHouseDto.getTypeOfHouse());
+        House createdHouse = houseService.createHouse(request);
         return ResponseEntity.ok(createdHouse);
     }
     

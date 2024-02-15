@@ -1,5 +1,6 @@
 package com.househunting.api.entity;
 
+import com.househunting.api.entity.enums.HouseType;
 import com.househunting.api.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,7 +8,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -48,4 +51,16 @@ public class House {
     private String coverImageUrl;
     private String price;
     private String googleMapLocation;
+    private Long bedRooms;
+    private Long bathRooms;
+    private String liveLocation;
+    // @Enumerated(EnumType.STRING)
+    private String typeOfHouse;
+
+
+        @ElementCollection
+    @CollectionTable(name = "house_features", joinColumns = @JoinColumn(name = "house_id"))
+    @MapKeyColumn(name = "feature_name")
+    @Column(name = "is_available")
+    private Map<String, Boolean> features = new HashMap<>();
 }

@@ -79,7 +79,6 @@ public class AuthenticationService {
             throw new RuntimeException("Failed to register user with profile picture");
         }
     }
-    
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
@@ -90,6 +89,16 @@ public class AuthenticationService {
                 .token(jwtToken)
                 .build();
     }
+    // public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    //     authenticationManager.authenticate(
+    //             new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+    //     var user = repository.findByEmail(request.getEmail())
+    //             .orElseThrow(() -> new RuntimeException("User not found"));
+    //     var jwtToken = jwtService.generateToken(user);
+    //     return AuthenticationResponse.builder()
+    //             .token(jwtToken)
+    //             .build();
+    // }
 
     public void sendPasswordResetEmail(String jsonString) throws MessagingException, javax.mail.MessagingException {
         // Extract email from JSON
