@@ -91,7 +91,7 @@ public class WishlistService {
                     // Set agent-related fields in the response
                     houseResponse.setAgentId(agent.getId());
                     houseResponse.setAgentEmail(agent.getEmail());
-                    houseResponse.setAgentPhonenumber(agent.getPhone());
+                    houseResponse.setAgentPhoneNumber(agent.getPhone());
                     houseResponse.setAgentName(agent.getFirstName()); // Adjust this based on your User entity
 
                 }

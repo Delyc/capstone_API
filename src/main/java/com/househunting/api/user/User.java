@@ -2,8 +2,8 @@ package com.househunting.api.user;
 
 import java.util.Collection;
 import java.util.List;
-
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.househunting.api.entity.Availability;
@@ -21,7 +21,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,18 +47,13 @@ public class User implements UserDetails {
     private List<Availability> availabilities;
 
     @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, orphanRemoval = true)
-    // @JsonIgnoreProperties("user")
+    @JsonIgnoreProperties("agent")
     private List<House> houses;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("user")
     private List<Visit> visits;
 
-    // @OneToMany
-    // @JoinColumn(name = "userID", referencedColumnName = "id")
-    // List<Wishlist> wishlists;
-
-    @NotNull(message = "username should not be null")
     private String firstName;;
 
     private String lastName;
@@ -73,19 +67,16 @@ public class User implements UserDetails {
 
     private String address;
 
-   
-    private String role;
+    private Status status;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     private String profilePictureUrl;
 
-    // @Override
-    // public Collection<? extends GrantedAuthority> getAuthorities() {
-    //     return List.of(new SimpleGrantedAuthority(role.name()));
-    // }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override

@@ -1,13 +1,7 @@
 package com.househunting.api.entity;
 
 import com.househunting.api.user.User;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -23,9 +17,9 @@ public class Visit {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "agent_id", nullable = false)
-    private User agent;
+    // @ManyToOne
+    // @JoinColumn(name = "agent_id", nullable = false)
+    // private User agent;
 
     @ManyToOne
     @JoinColumn(name = "house_id", nullable = false)
@@ -34,10 +28,4 @@ public class Visit {
     @ManyToOne
     @JoinColumn(name = "availability_id", nullable = false)
     private Availability availability;
-
-    
-
-
-
 }
-

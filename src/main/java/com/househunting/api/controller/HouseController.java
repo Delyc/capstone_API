@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +24,11 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
+
 // @RequestMapping("/api/v1/houses")
 @RequiredArgsConstructor
+
 public class HouseController {
 
     @Autowired
@@ -44,22 +48,24 @@ public class HouseController {
         return "Welcome to House Hunting API";
     }
 
-    @PostMapping(value = "/api/v1/houses/create/{user_id}", consumes = "multipart/form-data")
-    public ResponseEntity<House> createHouse(@PathVariable Long user_id,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("price") String price,
-            @RequestParam("googleMapLocation") String googleMapLocation) {
-    
+    @PostMapping("/api/v1/houses/create/{user_id}")
+    public ResponseEntity<House> createHouse(@PathVariable("user_id") Long userId,
+                                             @RequestBody HouseResponse createHouseDto) {
         HouseRequest request = new HouseRequest();
-        request.setUserId(user_id); // Set the user_id in the HouseRequest
-        request.setTitle(title);
-        request.setDescription(description);
-        request.setPrice(price);
-        request.setGoogleMapLocation(googleMapLocation);
-    
-        return ResponseEntity.ok(houseService.createHouse(request, file));
+        // Assuming HouseRequest is your service layer's expected input format
+        request.setUserId(userId);
+        request.setTitle(createHouseDto.getTitle());
+        request.setDescription(createHouseDto.getDescription());
+        request.setCoverImageUrl(createHouseDto.getCoverImageUrl());
+        request.setPrice(createHouseDto.getPrice());
+        request.setGoogleMapLocation(createHouseDto.getGoogleMapLocation());
+        request.setPictureUrls(createHouseDto.getPictureUrls());
+        request.setVideoUrls(createHouseDto.getVideoUrls());
+        request.setFeatures(createHouseDto.getFeatures());
+request.setBedRooms(createHouseDto.getBedRooms());
+request.setTypeOfHouse(createHouseDto.getTypeOfHouse());
+        House createdHouse = houseService.createHouse(request);
+        return ResponseEntity.ok(createdHouse);
     }
     
 
@@ -94,8 +100,6 @@ public class HouseController {
 
     @PostMapping("/api/v1/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody String email) throws MessagingException, javax.mail.MessagingException {
-        // Logic to generate a unique token and send a password reset link to the user's
-        // email
         service.sendPasswordResetEmail(email);
         return ResponseEntity.ok("Password reset instructions sent to your email.");
     }

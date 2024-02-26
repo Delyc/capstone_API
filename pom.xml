@@ -6,10 +6,12 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.2.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/> 
 	</parent>
 	<groupId>com.househunting</groupId>
 	<artifactId>api</artifactId>
+	<packaging>jar</packaging>
+
 	<version>0.0.1-SNAPSHOT</version>
 	<name>api</name>
 	<description>House hunting API</description>
@@ -21,7 +23,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
+ <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-amqp</artifactId>
+    </dependency>
 		  <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-websocket</artifactId>
@@ -115,9 +120,13 @@
 	<dependency>
     <groupId>com.sun.mail</groupId>
     <artifactId>javax.mail</artifactId>
-    <version>1.6.2</version> <!-- Use the latest version available -->
+    <version>1.6.2</version> 
 </dependency>
 
+<dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
 
 
 		
@@ -130,6 +139,8 @@
 	</dependencies>
 
 	<build>
+   <finalName>api</finalName>
+
 	 <resources>
         <resource>
             <directory>src/main/resources</directory>
