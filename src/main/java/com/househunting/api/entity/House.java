@@ -50,7 +50,9 @@ public class House {
     private String description;
     private String coverImageUrl;
     private String price;
-    private String googleMapLocation;
+    private String lat;
+    private String longi;
+    private String streetNumber;
     private Long bedRooms;
     private Long bathRooms;
     private String liveLocation;

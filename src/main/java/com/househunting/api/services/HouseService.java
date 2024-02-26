@@ -43,7 +43,9 @@ public class HouseService {
         house.setDescription(request.getDescription());
         house.setCoverImageUrl(request.getCoverImageUrl()); 
         house.setPrice(request.getPrice());
-        house.setGoogleMapLocation(request.getGoogleMapLocation());
+      house.setLat(request.getLat());
+      house.setLongi(request.getLongi());
+      house.setStreetNumber(request.getStreetNumber());
         house.setAgent(agent);
 house.setBedRooms(request.getBedRooms());
 house.setTypeOfHouse(request.getTypeOfHouse());
@@ -72,7 +74,9 @@ house.setTypeOfHouse(request.getTypeOfHouse());
         houseResponse.setPrice(house.getPrice());
         houseResponse.setCoverImageUrl(house.getCoverImageUrl());
         houseResponse.setDescription(house.getDescription());
-        houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+      houseResponse.setLongi(house.getLongi());
+      houseResponse.setLat(house.getLat());
+      houseResponse.setStreetNumber(house.getStreetNumber());
 houseResponse.setBedRooms(house.getBedRooms());
 houseResponse.setTypeOfHouse(house.getTypeOfHouse());
 houseResponse.setFeatures(house.getFeatures());
@@ -121,7 +125,7 @@ houseResponse.setFeatures(house.getFeatures());
             houseResponse.setPrice(house.getPrice());
             houseResponse.setCoverImageUrl(house.getCoverImageUrl());
             houseResponse.setDescription(house.getDescription());
-            houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+            // houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
             houseResponse.setBedRooms(house.getBedRooms());
             houseResponse.setTypeOfHouse(house.getTypeOfHouse());
             houseResponse.setFeatures(house.getFeatures());
@@ -189,7 +193,7 @@ houseResponse.setFeatures(house.getFeatures());
     }
 
     if (googleMapLocation != null && !googleMapLocation.isEmpty()) {
-        houseToUpdate.setGoogleMapLocation(googleMapLocation);
+        // houseToUpdate.setGoogleMapLocation(googleMapLocation);
     }
 
     if (file != null) {
@@ -220,7 +224,7 @@ public List<HouseResponse> getHousesForUser(Long userId) {
             houseResponse.setPrice(house.getPrice());
             houseResponse.setCoverImageUrl(house.getCoverImageUrl());
             houseResponse.setDescription(house.getDescription());
-            houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+            // houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
 
             // Include wishlist information
             List<WishlistResponse> wishlistResponses = new ArrayList<>();

@@ -28,7 +28,9 @@ public class HouseRequest {
     private String description;
     private String coverImageUrl;
     private String price;
-    private String googleMapLocation;
+    private String lat;
+    private String longi;
+    private String streetNumber;
     private Long userId;
     private Long bedRooms;
 

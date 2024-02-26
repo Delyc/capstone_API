@@ -160,3 +160,12 @@ public class AuthenticationService {
     }
 
 }
+
+
+
+
+// SPRING_DATASOURCE_URL=jdbc:postgres://admin:xd6ey8lILvkuz6klQpZtpwUULJIDHAAs@dpg-cncsbtun7f5s73bigf60-a.oregon-postgres.render.com/cozyapi
+// SPRING_DATASOURCE_USERNAME=admin
+// SPRING_DATASOURCE_PASSWORD=xd6ey8lILvkuz6klQpZtpwUULJIDHAAs
+// SPRING_MAIL_USERNAME=delyce35@gmail.com
+// SPRING_MAIL_PASSWORD=wtkn rmqr idjn lfnv

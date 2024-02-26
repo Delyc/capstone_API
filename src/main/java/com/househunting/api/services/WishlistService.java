@@ -83,7 +83,7 @@ public class WishlistService {
                 houseResponse.setPrice(house.getPrice());
                 houseResponse.setCoverImageUrl(house.getCoverImageUrl());
                 houseResponse.setDescription(house.getDescription());
-                houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+                // houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
     
                 // Retrieve agent information
                 User agent = house.getAgent(); // Use the 'getAgent' method
@@ -122,7 +122,7 @@ public class WishlistService {
                 houseResponse.setPrice(house.getPrice());
                 houseResponse.setCoverImageUrl(house.getCoverImageUrl());
                 houseResponse.setDescription(house.getDescription());
-                houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
+                // houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
 
                 response.setHouse(houseResponse);
                 wishlistResponses.add(response);

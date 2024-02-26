@@ -58,7 +58,10 @@ public class HouseController {
         request.setDescription(createHouseDto.getDescription());
         request.setCoverImageUrl(createHouseDto.getCoverImageUrl());
         request.setPrice(createHouseDto.getPrice());
-        request.setGoogleMapLocation(createHouseDto.getGoogleMapLocation());
+        request.setLongi(createHouseDto.getLongi());
+        request.setLat(createHouseDto.getLat());
+        request.setStreetNumber(createHouseDto.getStreetNumber());
+        // request.setGoogleMapLocation(createHouseDto.getGoogleMapLocation());
         request.setPictureUrls(createHouseDto.getPictureUrls());
         request.setVideoUrls(createHouseDto.getVideoUrls());
         request.setFeatures(createHouseDto.getFeatures());

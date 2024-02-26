@@ -18,7 +18,9 @@ public class HouseResponse {
     private String price;
     private String coverImageUrl;
     private String description;
-    private String googleMapLocation;
+    private String lat;
+    private String longi;
+    private String streetNumber;
     private List<WishlistResponse> wishlists;
     private Long agentId;
     private String agentName;
