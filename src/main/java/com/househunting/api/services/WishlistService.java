@@ -83,6 +83,9 @@ public class WishlistService {
                 houseResponse.setPrice(house.getPrice());
                 houseResponse.setCoverImageUrl(house.getCoverImageUrl());
                 houseResponse.setDescription(house.getDescription());
+                houseResponse.setLongi(house.getLongi());
+                houseResponse.setLat(house.getLat());
+                houseResponse.setStreetNumber(house.getStreetNumber());
                 // houseResponse.setGoogleMapLocation(house.getGoogleMapLocation());
     
                 // Retrieve agent information
