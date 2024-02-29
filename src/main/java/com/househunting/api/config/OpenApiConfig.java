@@ -25,8 +25,8 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 url = "http://localhost:8080"
             ),
             @Server(
-                description = "Heroku server",
-                url = "https://house-hunting-api.herokuapp.com"
+                description = "Railway server",
+                url = "https://capstoneapi-production-b1ec.up.railway.app/"
             )
         },
 
