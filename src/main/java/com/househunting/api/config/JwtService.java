@@ -37,7 +37,7 @@ public class JwtService {
         if (userDetails != null && userDetails instanceof User) {
             User user = (User) userDetails;
             extraClaims.put("id", user.getId());
-            extraClaims.put("role", user.getRole());
+            extraClaims.put("accountType", user.getAccountType());
             extraClaims.put("firstName", user.getFirstName());
             extraClaims.put("profilePictureUrl", user.getProfilePictureUrl());
         return Jwts

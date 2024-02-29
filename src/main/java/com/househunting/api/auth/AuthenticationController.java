@@ -43,6 +43,7 @@ public class AuthenticationController {
             @RequestParam("role") String role,
             @RequestParam("password") String password,
             @RequestParam("address") String address,
+            @RequestParam("accountType") String accountType,
             @RequestParam("phone") String phone) {
         RegisterRequest request = new RegisterRequest();
         request.setFirstName(firstName);
@@ -52,6 +53,7 @@ public class AuthenticationController {
         request.setRole(Role.ADMIN);
         request.setAddress(address);
         request.setPhone(phone);
+        request.setAccountType(accountType);
 
         return ResponseEntity.ok(service.register(request, file));
     }

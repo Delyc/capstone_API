@@ -69,6 +69,8 @@ public class User implements UserDetails {
 
     private Status status;
 
+    private String accountType;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

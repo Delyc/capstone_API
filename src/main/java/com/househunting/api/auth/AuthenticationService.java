@@ -63,13 +63,15 @@ public class AuthenticationService {
                     .lastName(request.getLastName())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.ADMIN)
+                    .accountType(request.getAccountType())
+                    // .role(Role)
                     .address(request.getAddress())
                     .phone(request.getPhone())
                     .profilePictureUrl(profilePictureUrl)
                     .build();
     
             repository.save(user);
+            
             var jwtToken = jwtService.generateToken(user);
             return AuthenticationResponse.builder()
                     .token(jwtToken)
