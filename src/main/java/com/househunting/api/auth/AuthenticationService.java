@@ -64,7 +64,7 @@ public class AuthenticationService {
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .accountType(request.getAccountType())
-                    // .role(Role)
+                    .role(Role.ADMIN)
                     .address(request.getAddress())
                     .phone(request.getPhone())
                     .profilePictureUrl(profilePictureUrl)
