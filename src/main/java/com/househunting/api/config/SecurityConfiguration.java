@@ -25,7 +25,10 @@ public class SecurityConfiguration {
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http.csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(requests -> requests
-                                                .requestMatchers("/api/v1/auth/**",
+                                                .requestMatchers(
+                                                        "/api/v1/auth/**",
+                                                        "/api/v1/auth/authenticate",
+                                                
                                                                 "/",
                                                                 "/api/v1/getAllHouses/**",
                                                                 "/api/v1/availabilities/**",
