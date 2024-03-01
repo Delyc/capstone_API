@@ -1,6 +1,7 @@
 package com.househunting.api.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.househunting.api.dto.HouseRequest;
+import com.househunting.api.dto.HouseResponse;
+import com.househunting.api.dto.ShareWishlistRequest;
+import com.househunting.api.dto.ShareWishlistResponse;
 import com.househunting.api.dto.WishlistResponse;
+import com.househunting.api.entity.House;
+import com.househunting.api.entity.ShareWishlist;
 import com.househunting.api.entity.Wishlist;
 import com.househunting.api.repository.WishlistRepository;
 import com.househunting.api.services.WishlistService;
@@ -77,11 +84,39 @@ public ResponseEntity<List<WishlistResponse>> getUserWishlistWithHouseDetails(@P
     return ResponseEntity.ok(userWishlist);
 }
 
-@PostMapping("/api/v1/wishlist/share/{user_id}")
-public ResponseEntity<String> shareWishlist(@PathVariable Long user_id, @RequestBody String recipientEmail){
-    wishlistService.shareWishlist(user_id, "delyceu@gmail.com");
-    return ResponseEntity.ok("Wishlist shared");
-}
+// @PostMapping("/api/v1/wishlist/share/{user_id}")
+// public ResponseEntity<String> shareWishlist(@PathVariable Long user_id, @RequestBody String recipientEmail){
+//     wishlistService.shareWishlist(user_id, "delyceu@gmail.com");
+//     return ResponseEntity.ok("Wishlist shared");
+
+// @PostMapping("/api/v1/wishlist/share/{user_id}")
+// public String shareWishlist(@PathVariable Long user_id, @RequestBody Map<String, String> requestBody) {
+//     // String recipientEmail = requestBody.get("recipientEmail");
+//     System.out.println("request email ##########################: " + requestBody);
+//     // wishlistService.shareWishlist(user_id, recipientEmail);
+//     return "added";
+// }
+
+// @PostMapping("/api/v1/wishlist/share/{user_id}")
+
+//     public String shareWishlist(@PathVariable("user_id") Long userId,
+//                                              @RequestBody ShareWishlistResponse wish) {
+//         ShareWishlistRequest request = new ShareWishlistRequest();
+// request.setRecipientEmail(wish.getRecipientEmail());
+// System.out.println("request email ##########################: " + wish);
+
+        
+//      wishlistService.shareWishlist(userId, wish.getRecipientEmail());
+//         return "test";
+//     }
+    
+@PostMapping("/api/v1/wishlist/share")
+    public String shareWishlist(
+            @RequestParam("user_id") Long user_id,
+            @RequestParam("recipientEmail") String recipientEmail) {
+        wishlistService.shareWishlist(user_id, recipientEmail);
+        return "House added to the wishlist successfully!";
+    }
 
 
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WishlistRequest {
     private Long user_id;
+    private String recipientEmail;
     private HouseRequest houseRequest;
 
 }

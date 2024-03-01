@@ -9,16 +9,18 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.househunting.api.dto.WishlistRequest;
+
 @Service
 public class MailSenderService {
 
     @Autowired
     private JavaMailSender mailSender;
 
-    public void sendNewMail(String to, String wishlistResponses, String body) throws jakarta.mail.MessagingException, MessagingException {
+    public void sendNewMail(String recipientEmail, String wishlistResponses, String body) throws jakarta.mail.MessagingException, MessagingException {
         jakarta.mail.internet.MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setTo(to);
+        helper.setTo(recipientEmail);
         helper.setSubject(wishlistResponses);
         helper.setText(body, true); // Set the content type to true for HTML
         mailSender.send(message);

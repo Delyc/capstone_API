@@ -109,6 +109,7 @@ public class WishlistService {
     }
     
     public void shareWishlist(Long userId, String recipientEmail) {
+        System.out.println("test#####################################################################################################################################################################" + recipientEmail);
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
