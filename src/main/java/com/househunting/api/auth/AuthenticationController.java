@@ -35,28 +35,43 @@ public class AuthenticationController {
 
     @MessageMapping("/user.register")
     @SendTo("/user/topic")
-    @PostMapping(value = "/register", consumes = "multipart/form-data")
-    public ResponseEntity<AuthenticationResponse> register(@RequestParam("file") MultipartFile file,
-            @RequestParam("firstName") String firstName,
-            @RequestParam("lastName") String lastName,
-            @RequestParam("email") String email,
-            @RequestParam("role") String role,
-            @RequestParam("password") String password,
-            @RequestParam("address") String address,
-            @RequestParam("accountType") String accountType,
-            @RequestParam("phone") String phone) {
-        RegisterRequest request = new RegisterRequest();
-        request.setFirstName(firstName);
-        request.setLastName(lastName);
-        request.setEmail(email);
-        request.setPassword(password);
-        request.setRole(Role.ADMIN);
-        request.setAddress(address);
-        request.setPhone(phone);
-        request.setAccountType(accountType);
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody  RegisterRequest request){
+        RegisterRequest userRequest = new RegisterRequest();
+        userRequest.setFirstName(request.getFirstName());
+        userRequest.setLastName(request.getLastName());
+        userRequest.setEmail(request.getEmail());
+        userRequest.setPassword(request.getPassword());
+        userRequest.setAddress(request.getAddress());
+        userRequest.setPhone(request.getPhone());
+        userRequest.setAccountType(request.getAccountType());
+        userRequest.setProfilePictureUrl(request.getProfilePictureUrl());
+        userRequest.setRole(Role.ADMIN);
+System.out.println("################################################" + userRequest);
+        return ResponseEntity.ok(service.register(userRequest));
 
-        return ResponseEntity.ok(service.register(request, file));
     }
+        
+    // @RequestParam("file") MultipartFile file,
+    //         @RequestParam("firstName") String firstName,
+    //         @RequestParam("lastName") String lastName,
+    //         @RequestParam("email") String email,
+    //         @RequestParam("role") String role,
+    //         @RequestParam("password") String password,
+    //         @RequestParam("address") String address,
+    //         @RequestParam("accountType") String accountType,
+    //         @RequestParam("phone") String phone) {
+    //     RegisterRequest request = new RegisterRequest();
+    //     request.setFirstName(firstName);
+    //     request.setLastName(lastName);
+    //     request.setEmail(email);
+    //     request.setPassword(password);
+    //     request.setRole(Role.ADMIN);
+    //     request.setAddress(address);
+    //     request.setPhone(phone);
+    //     request.setAccountType(accountType);
+
+    // }
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {

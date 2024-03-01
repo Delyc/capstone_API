@@ -38,39 +38,53 @@ public class AuthenticationService {
     
 
 
-    public AuthenticationResponse register(RegisterRequest request, MultipartFile file) {
+    public AuthenticationResponse register(RegisterRequest request) {
+        System.out.println("testing userrrrr ################################################################################################################");
+
         var existingUser = repository.findByEmail(request.getEmail());
         if (existingUser.isPresent()) {
             throw new DuplicateEmailException("Email already exists");
         }
     
         try {
-            String profilePictureUrl = null;
+            // String profilePictureUrl = null;
     
-            if (file != null && !file.isEmpty()) {
-                var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-                profilePictureUrl = (String) uploadResult.get("secure_url");
-            } else {
+            // if (file != null && !file.isEmpty()) {
+            //     var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            //     profilePictureUrl = (String) uploadResult.get("secure_url");
+            // } else {
 
-                profilePictureUrl = "https://res.cloudinary.com/ddlrtqeqm/image/upload/v1704103066/cld-sample-5.jpg";
-            }
+            //     profilePictureUrl = "https://res.cloudinary.com/ddlrtqeqm/image/upload/v1704103066/cld-sample-5.jpg";
+            // }
 
-
+User user = new User();
+    user.setFirstName(request.getFirstName());
+    user.setLastName(request.getLastName());
+    user.setEmail(request.getEmail());
+    user.setPassword(passwordEncoder.encode(request.getPassword()));
+    user.setStatus(Status.ONLINE);
+    user.setAccountType(request.getAccountType());
+    user.setAddress(request.getAddress());
+    user.setPhone(request.getPhone());
+    user.setRole(Role.ADMIN);
+    user.setProfilePictureUrl(request.getProfilePictureUrl());
+            // var user = User.builder()
+            //         .firstName(request.getFirstName())
+            //         .status(Status.ONLINE)
+            //         .lastName(request.getLastName())
+            //         .email(request.getEmail())
+            //         .password(passwordEncoder.encode(request.getPassword()))
+            //         .accountType(request.getAccountType())
+            //         .role(Role.ADMIN)
+            //         .address(request.getAddress())
+            //         .phone(request.getPhone())
+            //         .profilePictureUrl(request.getProfilePictureUrl())
+            //         .build();
     
-            var user = User.builder()
-                    .firstName(request.getFirstName())
-                    .status(Status.ONLINE)
-                    .lastName(request.getLastName())
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .accountType(request.getAccountType())
-                    .role(Role.ADMIN)
-                    .address(request.getAddress())
-                    .phone(request.getPhone())
-                    .profilePictureUrl(profilePictureUrl)
-                    .build();
-    
+
+                    System.out.println("testing userrrrr ################################################################################################################" + user);
             repository.save(user);
+            System.out.println("testing userrrrr ################################################################################################################" + user);
             
             var jwtToken = jwtService.generateToken(user);
             return AuthenticationResponse.builder()

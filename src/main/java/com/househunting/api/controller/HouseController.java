@@ -52,7 +52,7 @@ public class HouseController {
     public ResponseEntity<House> createHouse(@PathVariable("user_id") Long userId,
                                              @RequestBody HouseResponse createHouseDto) {
         HouseRequest request = new HouseRequest();
-        // Assuming HouseRequest is your service layer's expected input format
+
         request.setUserId(userId);
         request.setTitle(createHouseDto.getTitle());
         request.setDescription(createHouseDto.getDescription());

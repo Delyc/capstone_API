@@ -21,5 +21,6 @@ public class RegisterRequest {
     private String address;
     private Role role;
     private String accountType;
+    private String profilePictureUrl;
 
 }
