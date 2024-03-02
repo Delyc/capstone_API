@@ -110,13 +110,13 @@ public ResponseEntity<List<WishlistResponse>> getUserWishlistWithHouseDetails(@P
 //         return "test";
 //     }
     
-@PostMapping("/api/v1/wishlist/share")
-    public String shareWishlist(
-            @RequestParam("user_id") Long user_id,
-            @RequestParam("recipientEmail") String recipientEmail) {
-        wishlistService.shareWishlist(user_id, recipientEmail);
-        return "House added to the wishlist successfully!";
-    }
+// @PostMapping("/api/v1/wishlist/share")
+//     public String shareWishlist(
+//             @RequestParam("user_id") Long user_id,
+//             @RequestParam("recipientEmail") String recipientEmail) {
+//         wishlistService.shareWishlist(user_id, recipientEmail);
+//         return "House added to the wishlist successfully!";
+//     }
 
 
 }
