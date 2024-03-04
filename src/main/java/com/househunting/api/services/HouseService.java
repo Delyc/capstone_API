@@ -143,7 +143,8 @@ houseResponse.setFeatures(house.getFeatures());
             houseResponse.setAgentPicture(agent.getProfilePictureUrl());
 
                 houseResponse.setAgentPhoneNumber(agent.getPhone());
-                houseResponse.setAgentName(agent.getFirstName()); 
+                houseResponse.setAgentName(agent.getFirstName() + " " + agent.getLastName()); 
+
             }
     
             // Include wishlist information
