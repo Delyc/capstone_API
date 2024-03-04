@@ -84,6 +84,8 @@ houseResponse.setFeatures(house.getFeatures());
         if (agent != null) {
             houseResponse.setAgentId(agent.getId());
             houseResponse.setAgentEmail(agent.getEmail());
+            houseResponse.setAgentPicture(agent.getProfilePictureUrl());
+            
             houseResponse.setAgentPhoneNumber(agent.getPhone()); 
             houseResponse.setAgentName(agent.getFirstName() + " " + agent.getLastName()); 
         }
@@ -138,6 +140,8 @@ houseResponse.setFeatures(house.getFeatures());
                 // Set agent-related fields in the response
                 houseResponse.setAgentId(agent.getId());
                 houseResponse.setAgentEmail(agent.getEmail());
+            houseResponse.setAgentPicture(agent.getProfilePictureUrl());
+
                 houseResponse.setAgentPhoneNumber(agent.getPhone());
                 houseResponse.setAgentName(agent.getFirstName()); 
             }

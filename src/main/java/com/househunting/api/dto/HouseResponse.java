@@ -24,6 +24,7 @@ public class HouseResponse {
     private List<WishlistResponse> wishlists;
     private Long agentId;
     private String agentName;
+    private String agentPicture;
     private Long bedRooms;
 
     private String agentEmail;
