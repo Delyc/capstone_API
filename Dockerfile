@@ -1,4 +1,12 @@
+
+
+
 FROM eclipse-temurin:21-jdk as build
+ARG RAILWAY_DEPLOYMENT_ID
+ARG RAILWAY_GIT_COMMIT_SHA
+
+RUN echo "RAILWAY_GIT_COMMIT_SHA: $RAILWAY_GIT_COMMIT_SHA"
+RUN echo "RAILWAY_DEPLOYMENT_ID: $RAILWAY_DEPLOYMENT_ID"
 COPY . /app
 WORKDIR /app
 RUN ./mvnw --no-transfer-progress clean package -DskipTests
