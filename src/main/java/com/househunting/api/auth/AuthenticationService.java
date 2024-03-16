@@ -68,6 +68,10 @@ User user = new User();
     user.setPhone(request.getPhone());
     user.setRole(Role.ADMIN);
     user.setProfilePictureUrl(request.getProfilePictureUrl());
+    user.setCompanyName(request.getCompanyName());
+    user.setTiktok(request.getTiktok());
+    user.setYoutube(request.getYoutube());
+    user.setInsta(request.getInsta());
             // var user = User.builder()
             //         .firstName(request.getFirstName())
             //         .status(Status.ONLINE)

@@ -17,6 +17,10 @@ public class RegisterRequest {
     private String lastName;
     private String email;
     private String password;
+    private String companyName;
+    private String tiktok;
+    private String youtube;
+    private String insta;
     private String phone;
     private String address;
     private Role role;

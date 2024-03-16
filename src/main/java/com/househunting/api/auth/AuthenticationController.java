@@ -47,6 +47,10 @@ public class AuthenticationController {
         userRequest.setAccountType(request.getAccountType());
         userRequest.setProfilePictureUrl(request.getProfilePictureUrl());
         userRequest.setRole(Role.ADMIN);
+        userRequest.setCompanyName(request.getCompanyName());
+        userRequest.setTiktok(request.getTiktok());
+        userRequest.setYoutube(request.getYoutube());
+        userRequest.setInsta(request.getInsta());
 System.out.println("################################################" + userRequest);
         return ResponseEntity.ok(service.register(userRequest));
 

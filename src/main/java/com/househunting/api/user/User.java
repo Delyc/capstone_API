@@ -58,6 +58,13 @@ public class User implements UserDetails {
 
     private String lastName;
 
+    private String companyName;
+
+    private String tiktok;
+    private String youtube;
+    private String insta;
+
+
     @Column(unique = true)
     private String email;
 

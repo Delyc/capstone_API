@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,22 @@ public class House {
     private String liveLocation;
     // @Enumerated(EnumType.STRING)
     private String typeOfHouse;
+  @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
         @ElementCollection
     @CollectionTable(name = "house_features", joinColumns = @JoinColumn(name = "house_id"))
