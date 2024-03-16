@@ -23,5 +23,7 @@ public class HouseUpdateRequest {
     private List<String> features;
     private Long bedRooms;
     private String typeOfHouse;
+    private Boolean availableStatus;
+
     // Getters and setters
 }

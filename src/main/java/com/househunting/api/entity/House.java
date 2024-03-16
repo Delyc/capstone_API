@@ -57,6 +57,7 @@ public class House {
     private Long bedRooms;
     private Long bathRooms;
     private String liveLocation;
+    private Boolean availableStatus=true;
     // @Enumerated(EnumType.STRING)
     private String typeOfHouse;
   @Column(nullable = false, updatable = false)

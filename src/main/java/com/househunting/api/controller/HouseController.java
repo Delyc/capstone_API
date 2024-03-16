@@ -50,7 +50,7 @@ public class HouseController {
         return "Welcome to House Hunting API";
     }
 
-    @PostMapping("/api/v1/houses/create/{user_id}")
+    @PostMapping("/create/{user_id}")
     public ResponseEntity<House> createHouse(@PathVariable("user_id") Long userId,
                                              @RequestBody HouseResponse createHouseDto) {
         HouseRequest request = new HouseRequest();
