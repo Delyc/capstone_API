@@ -1,5 +1,6 @@
 package com.househunting.api.dto;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,11 @@ public class HouseRequest {
     private String streetNumber;
     private Long userId;
     private Long bedRooms;
+// @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
+    // @Column(nullable = false)
+    private LocalDateTime updatedAt;
     // @Enumerated(EnumType.STRING)
 
     private String typeOfHouse;

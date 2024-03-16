@@ -1,4 +1,5 @@
 package com.househunting.api.config;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,13 +27,13 @@ public class SecurityConfiguration {
                 http.csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(requests -> requests
                                                 .requestMatchers(
-                                                        "/api/v1/auth/**",
-                                                        "/api/v1/auth/authenticate",
-                                                
+                                                                "/api/v1/auth/**",
+                                                                "/api/v1/auth/authenticate",
+
                                                                 "/",
                                                                 "/api/v1/getAllHouses/**",
                                                                 "/api/v1/availabilities/**",
-                                                                                                                                "/api/v1/availabilities/**",
+                                                                "/api/v1/availabilities/**",
                                                                 "/api/v1/visits/**",
 
                                                                 "/api/v1/wishlist/**",
@@ -59,5 +60,4 @@ public class SecurityConfiguration {
                 return http.build();
         }
 
-     
 }

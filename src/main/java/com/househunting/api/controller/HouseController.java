@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.househunting.api.auth.AuthenticationService;
 import com.househunting.api.dto.HouseRequest;
 import com.househunting.api.dto.HouseResponse;
+import com.househunting.api.dto.HouseUpdateRequest;
 import com.househunting.api.entity.House;
 import com.househunting.api.services.HouseService;
 import com.househunting.api.user.UserRepository;
@@ -26,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 
-// @RequestMapping("/api/v1/houses")
+@RequestMapping("/api/v1/houses")
 @RequiredArgsConstructor
 
 public class HouseController {
@@ -72,12 +74,12 @@ request.setTypeOfHouse(createHouseDto.getTypeOfHouse());
     }
     
 
-    @GetMapping("/api/v1/getAllHouses")
+    @GetMapping("/getAllHouses")
     public ResponseEntity<Object> getAllHouses() {
         return ResponseEntity.ok(houseService.getAllHouses());
     }
 
-    @GetMapping("/api/v1/getAllHouses/{id}")
+    @GetMapping("/getAllHouses/{id}")
     public ResponseEntity<Object> getHouseById(@PathVariable Long id) {
         return ResponseEntity.ok(houseService.getHouseById(id));
     }
@@ -88,26 +90,19 @@ request.setTypeOfHouse(createHouseDto.getTypeOfHouse());
         return ResponseEntity.ok("House deleted successfully");
     }
 
-    @PutMapping(value = "/api/v1/updateHouse/{id}", consumes = "multipart/form-data")
-    public ResponseEntity<Object> updateHouse(
-            @PathVariable Long id,
-            @RequestParam(required = false) MultipartFile file,
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) String price,
-            @RequestParam(required = false) String googleMapLocation) {
-
-        houseService.updateHouse(id, file, title, description, price, googleMapLocation);
+    @PutMapping("/updateHouse/{id}")
+    public ResponseEntity<Object> updateHouse(@PathVariable Long id, @RequestBody HouseUpdateRequest updateHouseDto) {
+        houseService.updateHouse(id, updateHouseDto);
         return ResponseEntity.ok("House updated successfully");
     }
-
+    
     @PostMapping("/api/v1/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestBody String email) throws MessagingException, javax.mail.MessagingException {
         service.sendPasswordResetEmail(email);
         return ResponseEntity.ok("Password reset instructions sent to your email.");
     }
 
-     @GetMapping("/api/v1/houses/{user_id}")
+     @GetMapping("/{user_id}")
     public ResponseEntity<List<HouseResponse>> getHousesForUser(@PathVariable Long user_id) {
         List<HouseResponse> housesForUser = houseService.getHousesForUser(user_id);
 

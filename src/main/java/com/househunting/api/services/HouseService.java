@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.househunting.api.dto.HouseRequest;
 import com.househunting.api.dto.HouseResponse;
+import com.househunting.api.dto.HouseUpdateRequest;
 import com.househunting.api.dto.WishlistResponse;
 import com.househunting.api.entity.House;
 import com.househunting.api.entity.Picture;
@@ -80,6 +82,9 @@ house.setTypeOfHouse(request.getTypeOfHouse());
 houseResponse.setBedRooms(house.getBedRooms());
 houseResponse.setTypeOfHouse(house.getTypeOfHouse());
 houseResponse.setFeatures(house.getFeatures());
+houseResponse.setCreatedAt(house.getCreatedAt());
+houseResponse.setUpdatedAt(house.getUpdatedAt());
+// houseResponse.
         User agent = house.getAgent(); 
         if (agent != null) {
             houseResponse.setAgentId(agent.getId());
@@ -183,41 +188,53 @@ houseResponse.setFeatures(house.getFeatures());
     }
 
 
-    public House updateHouse(Long id, MultipartFile file, String title, String description, String price,
-                         String googleMapLocation) {
-    House houseToUpdate = houseRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("House not found with ID: " + id));
-
-    if (title != null && !title.isEmpty()) {
-        houseToUpdate.setTitle(title);
-    }
-
-    if (description != null && !description.isEmpty()) {
-        houseToUpdate.setDescription(description);
-    }
-
-    if (price != null && !price.isEmpty()) {
-        houseToUpdate.setPrice(price);
-    }
-
-    if (googleMapLocation != null && !googleMapLocation.isEmpty()) {
-        // houseToUpdate.setGoogleMapLocation(googleMapLocation);
-    }
-
-    if (file != null) {
-        try {
-            var uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-            String newCoverImageUrl = (String) uploadResult.get("secure_url");
-            houseToUpdate.setCoverImageUrl(newCoverImageUrl);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload new image");
+    public void updateHouse(Long id, HouseUpdateRequest updateRequest) {
+        House house = houseRepository.findById(id)
+            .orElseThrow();
+        
+        // Update fields if they are not null
+        if (updateRequest.getTitle() != null) {
+            house.setTitle(updateRequest.getTitle());
         }
+        if (updateRequest.getDescription() != null) {
+            house.setDescription(updateRequest.getDescription());
+        }
+        if (updateRequest.getCoverImageUrl() != null) {
+            house.setCoverImageUrl(updateRequest.getCoverImageUrl());
+        }
+        if (updateRequest.getPrice() != null) {
+            house.setPrice(updateRequest.getPrice());
+        }
+        if (updateRequest.getLongi() != null && updateRequest.getLat() != null) {
+            house.setLongi(updateRequest.getLongi());
+            house.setLat(updateRequest.getLat());
+        }
+        if (updateRequest.getStreetNumber() != null) {
+            house.setStreetNumber(updateRequest.getStreetNumber());
+        }
+        if (updateRequest.getPictures() != null) {
+            house.setPictures(updateRequest.getPictures());
+            // house.setPictureUrls(updateRequest.getPictureUrls());
+        }
+        if (updateRequest.getVideos() != null) {
+            house.setVideos(updateRequest.getVideos());
+        }
+        if (updateRequest.getFeatures() != null) {
+            house.setFeatures((Map<String, Boolean>) updateRequest.getFeatures());
+        }
+        if (updateRequest.getBedRooms() != null) {
+            house.setBedRooms(updateRequest.getBedRooms());
+            // house.setBedRooms(updateRequest.getBedRooms());
+        }
+        if (updateRequest.getTypeOfHouse() != null) {
+            house.setTypeOfHouse(updateRequest.getTypeOfHouse());
+        }
+        
+        // Save the updated house
+        houseRepository.save(house);
     }
 
-    houseRepository.save(houseToUpdate);
-    return houseToUpdate;
-}
-
+    
 public List<HouseResponse> getHousesForUser(Long userId) {
     Optional<User> userOptional = userRepository.findById(userId);
 
