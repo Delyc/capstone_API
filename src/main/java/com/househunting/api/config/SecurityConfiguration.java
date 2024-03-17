@@ -29,7 +29,7 @@ public class SecurityConfiguration {
                                                 .requestMatchers(
                                                                 "/api/v1/auth/**",
                                                                 "/api/v1/auth/authenticate",
-
+"https://capstoneapi-production-b1ec.up.railway.app/api/v1/getAllHouses",
                                                                 "/",
                                                                 "/api/v1/getAllHouses/**",
                                                                 "/api/v1/availabilities/**",
